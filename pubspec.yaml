@@ -26,15 +26,15 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
-  path_provider: ^2.0.2
+  path_provider: ^2.0.4
   path: ^1.8.0
   package_info: ^2.0.2
   device_info: ^2.0.2
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.0.7
   # connectivity: ^3.0.6
   dio: ^4.0.0
   sembast: ^3.1.0+2
-  flutter_bloc: ^7.1.0
+  flutter_bloc: ^7.3.0
   equatable: ^2.0.3
   collection: ^1.15.0
   get_it: ^7.2.0
@@ -45,6 +45,7 @@ dependencies:
   cached_network_image: ^3.1.0
   image_picker: ^0.8.3+2
   another_flushbar: ^1.10.24
+  skeleton_text: ^3.0.0
 
 
 

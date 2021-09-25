@@ -3,11 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tv_shows/data/models/button_status_enum.dart';
-import 'package:tv_shows/data/models/current_user_login_credentials.dart';
-import 'package:tv_shows/helpers/utils.dart';
 
+import '../../data/models/current_user_login_credentials.dart';
 import '../../data/repository/user_repository.dart';
+import '../../helpers/utils.dart';
 import '../authentication/authentication_cubit.dart';
 
 part 'login_page_state.dart';
@@ -103,9 +102,10 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
     var loginSuccessful = false;
     String? loginErrorMessage;
     try {
-      await Future.delayed(Duration(milliseconds: 4000));
-      loginErrorMessage = "aaaaa";
-      loginSuccessful = true;
+      await Future.delayed(Duration(milliseconds: 500));
+      final token = await _userRepository.webApiUserLoginWithEmailAndPassword(email: _email, password: _password);                                                                                            
+      await _userRepository.saveWebApiAuthTokenToSharedPrefs(token ?? "");
+      loginSuccessful = true;// (token ?? "").isNotEmpty;
     } catch (e) {
       loginErrorMessage = e.toString(); 
     }

@@ -1,26 +1,29 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:skeleton_text/skeleton_text.dart';
 import 'package:tv_shows/bloc/authentication/authentication_cubit.dart';
-import 'package:tv_shows/bloc/shows_home_page/shows_home_page_cubit.dart';
+import 'package:tv_shows/bloc/tv_shows_home_page/tv_shows_home_page_cubit.dart';
 import 'package:tv_shows/core/app_config.dart';
 import 'package:tv_shows/core/localization/app_localization.dart';
+import 'package:tv_shows/data/models/tv_shows_model.dart';
 import 'package:tv_shows/helpers/app_colors.dart';
 import 'package:tv_shows/helpers/flushbar_helper.dart';
 import 'package:tv_shows/widgets/app_circular_progress_indicator.dart';
 
-class ShowsHomePage extends StatefulWidget {
-  ShowsHomePage({Key? key}) : super(key: key);
+class TvShowsHomePage extends StatefulWidget {
+  TvShowsHomePage({Key? key}) : super(key: key);
 
   @override
-  _ShowsHomePageState createState() => _ShowsHomePageState();
+  _TvShowsHomePageState createState() => _TvShowsHomePageState();
 }
 
-class _ShowsHomePageState extends State<ShowsHomePage> {
+class _TvShowsHomePageState extends State<TvShowsHomePage> {
   
   
   @override
@@ -46,12 +49,12 @@ class _ShowsHomePageState extends State<ShowsHomePage> {
           )
         ],
       ),
-      body: BlocConsumer<ShowsHomePageCubit, ShowsHomePageBaseState>(
+      body: BlocConsumer<TvShowsHomePageCubit, TvShowsHomePageBaseState>(
         listenWhen: (previous, current) {
-          return current is ShowsHomePageShowSnackbarState;
+          return current is TvShowsHomePageShowSnackbarState;
         },
         listener: (context, state) {
-          if (state is ShowsHomePageShowSnackbarState) {
+          if (state is TvShowsHomePageShowSnackbarState) {
             AppFlushbarHelper.showFlushbar(
               context: context, 
               message: AppLocalizations.of(context).localizedString(state.message)
@@ -59,12 +62,14 @@ class _ShowsHomePageState extends State<ShowsHomePage> {
           }
         },
         buildWhen: (previous, current) {
-          return  current is ShowsHomePageLoadingState ||
-                  current is ShowsHomePageLoadedState;
+          return  current is TvShowsHomePageLoadingState ||
+                  current is TvShowsHomePageLoadedState;
         },
         builder: (context, state) {
           
-          if (state is ShowsHomePageLoadingState) {
+
+          if (state is TvShowsHomePageLoadingState) {
+
             return Padding(
               padding: const EdgeInsets.all(DEFAULT_CONTENT_PADDING),
               child: Center(
@@ -87,23 +92,29 @@ class _ShowsHomePageState extends State<ShowsHomePage> {
                 ),
               ),
             );
+
           }
 
 
-          if (state is ShowsHomePageLoadedState) {
+          if (state is TvShowsHomePageLoadedState) {
+
             return SafeArea(
               child: Builder(
                 builder: (context) {
+
                   if (state.showsList.isEmpty) {
                     return Container();
+
                   } else {
-                    return ListView.separated(
-                      padding: EdgeInsets.all(DEFAULT_CONTENT_PADDING),
+
+                    return ListView.builder(
+                      padding: EdgeInsets.symmetric(vertical: DEFAULT_CONTENT_PADDING),
                       itemBuilder: (context, index) {
-                        final show = state.showsList[index];
-                        return Container();
+                        return _buildTvShowListItemWidget(
+                          tvShowsModel: state.showsList[index],
+                          onPressed: () => debugPrint("aaa")
+                        );
                       }, 
-                      separatorBuilder: (_,__) => SizedBox(height: 8,), 
                       itemCount: state.showsList.length
                     );
                   }
@@ -120,6 +131,48 @@ class _ShowsHomePageState extends State<ShowsHomePage> {
   }
 
 
+  Widget _buildTvShowListItemWidget({
+    required TvShowsModel tvShowsModel,
+    required VoidCallback? onPressed
+  }) {
+    return PlatformWidgetBuilder(
+      cupertino: (_, child, __) => GestureDetector(child: child, onTap: onPressed),
+      material: (_, child, __) => InkWell(child: child, onTap: onPressed),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: DEFAULT_CONTENT_PADDING,
+          vertical: 6
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 120,
+              width: 120 * 0.675,
+              decoration: BoxDecoration(
+                color: AppColors.imagePlaceholderColor
+              ),
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: tvShowsModel.imageUrlAbsolute,
+                placeholder: (context, url) => SkeletonAnimation(
+                  child: Container(),
+                  shimmerColor: AppColors.skeletonAnimationShimmerColor
+                ),
+                errorWidget: (context, url, error) => Center(
+                  child: Icon(Icons.warning_amber_outlined, size: 32, color: AppColors.grey)
+                ),
+              ),
+            ),
+            SizedBox(width: 20),
+            Text(
+              tvShowsModel.title
+            )
+          ],
+        )
+      ),
+    );
+  }
 
   Future<void> _askUserToSignOut() async {
     bool? shouldSignOut;

@@ -6,6 +6,7 @@ const DEFAULT_CONTENT_PADDING = 16.0;
 const String APP_NAME = 'TV Shows';
 const String LANG_CODE = "lang_code";
 const String APP_THEME_ID = "app_theme_id";
+const String WEB_API_AUTH_TOKEN_SHARED_PREFS_KEY = "web_api_auth_token";
 
 
 class AppConfig {
@@ -37,7 +38,7 @@ class AppConfig {
       languageCode: "de",
       languageName: "Deutsch",
       languageNameEn: "German",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/germany.svg",
       displayOrder: 2
     ),
@@ -45,7 +46,7 @@ class AppConfig {
       languageCode: "hr",
       languageName: "Hrvatski",
       languageNameEn: "Croatian",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/croatia.svg",
       displayOrder: 3
     ),
@@ -53,7 +54,7 @@ class AppConfig {
       languageCode: "es",
       languageName: "Español",
       languageNameEn: "Spanish",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/spain.svg",
       displayOrder: 4
     ),
@@ -61,7 +62,7 @@ class AppConfig {
       languageCode: "fr",
       languageName: "Français",
       languageNameEn: "French",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/france.svg",
       displayOrder: 5
     ),
@@ -69,7 +70,7 @@ class AppConfig {
       languageCode: "ja",
       languageName: "日本語",
       languageNameEn: "Japanese",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/japan.svg",
       displayOrder: 6
     ),
@@ -77,7 +78,7 @@ class AppConfig {
       languageCode: "nl",
       languageName: "Dutch",
       languageNameEn: "Nederlands",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/netherlands.svg",
       displayOrder: 7
     ),
@@ -85,7 +86,7 @@ class AppConfig {
       languageCode: "da",
       languageName: "Dansk",
       languageNameEn: "Danish",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/denmark.svg",
       displayOrder: 8
     ),
@@ -93,7 +94,7 @@ class AppConfig {
       languageCode: "sv",
       languageName: "Svenska",
       languageNameEn: "Swedish",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/sweden.svg",
       displayOrder: 9
     ),
@@ -101,7 +102,7 @@ class AppConfig {
       languageCode: "no",
       languageName: "Norsk",
       languageNameEn: "Norwegian",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/norway.svg",
       displayOrder: 10
     ),
@@ -109,7 +110,7 @@ class AppConfig {
       languageCode: "it",
       languageName: "Italiano",
       languageNameEn: "Italian",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/italy.svg",
       displayOrder: 11
     ),
@@ -117,7 +118,7 @@ class AppConfig {
       languageCode: "ru",
       languageName: "Русский",
       languageNameEn: "Russian",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/russia.svg",
       displayOrder: 12
     ),
@@ -125,7 +126,7 @@ class AppConfig {
       languageCode: "tr",
       languageName: "Türkçe",
       languageNameEn: "Turkish",
-      isActive: true, 
+      isActive: false, 
       localSvgFlagImageAssetPath: "assets/svg/countrys_flags/turkey.svg",
       displayOrder: 13
     ),

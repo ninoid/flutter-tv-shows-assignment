@@ -10,23 +10,23 @@ class AppThemes {
 
   static final ThemeData materialLightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: AppColors.appPink,
-    accentColor: AppColors.appPink,
+    primaryColor: AppColors.pink,
+    accentColor: AppColors.pink,
     colorScheme: ColorScheme.light(
       // FlatButton's text color
-      primary: AppColors.appPink, 
+      primary: AppColors.pink, 
     ),
    
-    buttonColor: AppColors.appPink,
+    buttonColor: AppColors.pink,
     buttonTheme: ButtonThemeData(
-      buttonColor: AppColors.appPink,     //  <-- dark color
+      buttonColor: AppColors.pink,     //  <-- dark color
       textTheme: ButtonTextTheme.primary, //  <-- this auto selects the right color
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.white,
       elevation: 0,
       iconTheme: IconThemeData(
-        color: AppColors.appPink
+        color: AppColors.pink
       ),
     ),
     scaffoldBackgroundColor: Colors.white
@@ -37,7 +37,7 @@ class AppThemes {
 
   static final CupertinoThemeData cupertinoLightTheme = CupertinoThemeData(
     brightness: Brightness.light,
-    primaryColor: AppColors.appPink,
+    primaryColor: AppColors.pink,
   );
 
  

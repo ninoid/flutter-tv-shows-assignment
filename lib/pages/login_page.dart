@@ -1,16 +1,15 @@
-import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tv_shows/bloc/login_page/login_page_cubit.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/core/localization/app_localization.dart';
-import 'package:tv_shows/data/models/button_status_enum.dart';
-import 'package:tv_shows/helpers/app_colors.dart';
-import 'package:tv_shows/helpers/flushbar_helper.dart';
-import 'package:tv_shows/widgets/app_circular_progress_indicator.dart';
+
+import '../bloc/login_page/login_page_cubit.dart';
+import '../core/app_config.dart';
+import '../core/localization/app_localization.dart';
+import '../helpers/app_colors.dart';
+import '../helpers/flushbar_helper.dart';
+import '../widgets/app_circular_progress_indicator.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -92,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                           maxLength: 100,
                           maxLines: 1,
                           minLines: 1,
-                          cursorColor: AppColors.appPink,
+                          cursorColor: AppColors.pink,
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context).localizedString("Email"),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -135,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                           maxLength: 100,
                           maxLines: 1,
                           minLines: 1,
-                          cursorColor: AppColors.appPink,
+                          cursorColor: AppColors.pink,
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context).localizedString("Password"),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -170,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                                 height: state.showPassword ? 22 : 24, // tweak height since svg different
                                 fit: BoxFit.fitHeight,
                                 color: !state.isLoginInProgress
-                                  ? AppColors.appPink
+                                  ? AppColors.pink
                                   : AppColors.grey.withOpacity(0.75)
                               ),
                               onPressed: !state.isLoginInProgress
@@ -196,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                           contentPadding: const EdgeInsets.all(0),
                           dense: false,
                           autofocus: false,
-                          activeColor: AppColors.appPink,
+                          activeColor: AppColors.pink,
                           checkColor: Colors.white,
                           value: state.isRememberMeChecked,
                           onChanged: !state.isLoginInProgress
@@ -219,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                             horizontal: DEFAULT_CONTENT_PADDING,
                             vertical: 12
                           ),
-                          color: AppColors.appPink,
+                          color: AppColors.pink,
                           child: Builder(
                             builder: (context) {
                               if (state.isLoginInProgress) {

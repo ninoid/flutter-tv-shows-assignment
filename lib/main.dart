@@ -6,11 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:tv_shows/data/repository/tv_shows_repository.dart';
 
 import 'bloc/application/application_cubit.dart';
 import 'bloc/authentication/authentication_cubit.dart';
 import 'bloc/login_page/login_page_cubit.dart';
-import 'bloc/shows_home_page/shows_home_page_cubit.dart';
+import 'bloc/tv_shows_home_page/tv_shows_home_page_cubit.dart';
 import 'core/app_config.dart';
 import 'core/bloc_observer/app_bloc_observer.dart';
 import 'core/localization/app_localization.dart';
@@ -18,7 +19,7 @@ import 'data/models/app_theme_enum.dart';
 import 'data/repository/user_repository.dart';
 import 'helpers/app_theme.dart';
 import 'pages/login_page.dart';
-import 'pages/shows_home_page.dart';
+import 'pages/tv_shows_home_page.dart';
 
 void main() {
   
@@ -54,12 +55,15 @@ void main() {
 class RootApp extends StatelessWidget with WidgetsBindingObserver {
 
   late final UserRepository _userRepository;
+  late final TvShowsRepository _tvShowsRepository;
   late final ApplicationCubit _applicationCubit;
   late final AuthenticationCubit _authenticationCubit;
 
   RootApp({Key? key}) : super(key: key) {
 
-    _userRepository = UserRepository();
+    _userRepository = UserRepositoryImpl();
+    _tvShowsRepository = TvShowsRepositoryImpl();
+
     _authenticationCubit = AuthenticationCubit(
       userRepository: _userRepository
     );
@@ -79,6 +83,9 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
       providers: [
         RepositoryProvider<UserRepository>.value(
           value: _userRepository
+        ),
+        RepositoryProvider<TvShowsRepository>.value(
+          value: _tvShowsRepository
         )
       ],
       child: MultiBlocProvider(
@@ -153,8 +160,10 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
 
                           if (state is AuthenticationAuthenticatedState) {
                             return BlocProvider(
-                              create: (_) => ShowsHomePageCubit()..loadShows(),
-                              child: ShowsHomePage(),
+                              create: (_) => TvShowsHomePageCubit(
+                                tvShowsRepository: context.read<TvShowsRepository>()
+                              )..loadShows(),
+                              child: TvShowsHomePage(),
                             );
                           }
 
