@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv_shows/core/app_config.dart';
+import 'package:tv_shows/data/models/api_response.dart';
 import 'package:tv_shows/data/web_api_service.dart';
 
 import '../models/current_user_login_credentials.dart';
@@ -14,7 +15,7 @@ abstract class UserRepository {
 
   Future<bool> saveWebApiAuthTokenToSharedPrefs(String token);
 
-  Future<String?> webApiUserLoginWithEmailAndPassword({required String email, required String password});
+  Future<WebApiResult<String?>> webApiUserLoginWithEmailAndPassword({required String email, required String password});
 
   Future<CurrentUserCredientalsModel?> restoreCurrentUserLoginCredientals();
 
@@ -69,12 +70,20 @@ class UserRepositoryImpl extends UserRepository {
 
 
   @override
-  Future<String?> webApiUserLoginWithEmailAndPassword({required String email, required String password}) async {
-    final response = await WebApiService.instance.userLogin(email: email, password: password);
-    if (response.statusCode == 200) {
-      return response.data["dataa"]?["token"]?.toString();
+  Future<WebApiResult<String?>> webApiUserLoginWithEmailAndPassword({
+    required String email, 
+    required String password
+  }) async {
+
+    try {
+      final dioResponse = await WebApiService.instance.userLogin(email: email, password: password);
+      final WebApiResult<String> apiResult = WebApiResult.fromDioResponse(dioResponse);
+      apiResult.result = dioResponse.data["data"]?["token"]?.toString();
+      return apiResult;
+    } catch (e) {
+      return WebApiResult.fromError(e);
     }
-    return null;
+
   }
 
 

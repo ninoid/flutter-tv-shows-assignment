@@ -1,10 +1,7 @@
 {
-  "ERROR.SOMETHING_WENT_WRONG": "Whooooops, something went wrong.",
-  "ERROR.SOMETHING_WEIRD_HAPPENED": "Sorry, something weird happened.",
-  "ERROR.INVALID_RESPONSE_DATA_FORMAT": "Invalid response data.",
-  "ERROR.CONNECTION_TIMED_OUT": "Connection timed out.",
-  "ERROR.NO_INTERNET": "Please connect to the internet and try again.",
-  "unknown_error": "Unknown error",
+  "error_no_internet": "Please connect to the internet and try again.",
+  "error_generic_something_went_wrong_localized_key": "Whooooops, something went wrong.",
+  "error_invalid_response_data_format": "Invalid response data",
+  "error_connection_timeout": "Connection timed out",
   "session_expired": "Session expired"
-
 }

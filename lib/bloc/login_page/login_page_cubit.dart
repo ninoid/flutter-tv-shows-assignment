@@ -100,12 +100,17 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
     );
     emit(currentState);
     var loginSuccessful = false;
-    String? loginErrorMessage;
+    String loginErrorMessage = "";
     try {
       await Future.delayed(Duration(milliseconds: 500));
-      final token = await _userRepository.webApiUserLoginWithEmailAndPassword(email: _email, password: _password);                                                                                            
-      await _userRepository.saveWebApiAuthTokenToSharedPrefs(token ?? "");
-      loginSuccessful = true;// (token ?? "").isNotEmpty;
+      final apiResult = await _userRepository.webApiUserLoginWithEmailAndPassword(email: _email, password: _password);
+      final token = apiResult.result ?? ""; 
+      final isSuccess = apiResult.isStatusCodeOk && token.isNotEmpty;  
+      if (!isSuccess) {
+        loginErrorMessage = apiResult.errorMessage;
+      }                                                                                  
+      await _userRepository.saveWebApiAuthTokenToSharedPrefs(token);
+      loginSuccessful = isSuccess;
     } catch (e) {
       loginErrorMessage = e.toString(); 
     }
@@ -128,7 +133,7 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
       }
 
     } else {
-      emit(LoginPageInformUserWithSnackbarState(message: loginErrorMessage ?? "Whoooops, login failed"));
+      emit(LoginPageInformUserWithSnackbarState(message: loginErrorMessage));
       emit(currentState.copyWith(
         isLoginInProgress: false
       ));
