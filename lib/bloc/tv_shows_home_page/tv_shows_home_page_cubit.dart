@@ -19,10 +19,10 @@ class TvShowsHomePageCubit extends Cubit<TvShowsHomePageBaseState> {
   Future<void> loadShows() async {
     emit(TvShowsHomePageLoadingState());
 
-    final s = await _tvShowsRepository.getWebApiShows(); 
+    final apiResult = await _tvShowsRepository.getWebApiShows(); 
 
     emit(TvShowsHomePageLoadedState(
-      showsList: s ?? []
+      showsList: apiResult.result ?? []
     ));
 
   }

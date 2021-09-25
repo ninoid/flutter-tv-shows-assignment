@@ -25,8 +25,6 @@ class WebApiService {
     required String password
   }) async {
     final dio = await DioClient().getDio();
-    // final deviceUserFriendlyCodeEncoded = Uri.encodeComponent(deviceUserFriendlyCode);
-    // final url = "${webApiBaseUrl}users";
     final url = "$webApiBaseUrl/api/users/sessions";
     final data = {
       "email": email,
@@ -40,9 +38,34 @@ class WebApiService {
 
   Future<Response> getShows() async {
     final dio = await DioClient().getDio();
-    // final deviceUserFriendlyCodeEncoded = Uri.encodeComponent(deviceUserFriendlyCode);
-    // final url = "${webApiBaseUrl}users";
     final url = "$webApiBaseUrl/api/shows";
+    debugPrint("WebApi request url: $url");
+    final response = await dio.get(url);
+    debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
+    return response;
+  }
+
+  Future<Response> getShowDetails({required String showId}) async {
+    final dio = await DioClient().getDio();
+    final url = "$webApiBaseUrl/api/shows/$showId";
+    debugPrint("WebApi request url: $url");
+    final response = await dio.get(url);
+    debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
+    return response;
+  }
+
+  Future<Response> getShowEpisodes({required String showId}) async {
+    final dio = await DioClient().getDio();
+    final url = "$webApiBaseUrl/api/shows/$showId/episodes";
+    debugPrint("WebApi request url: $url");
+    final response = await dio.get(url);
+    debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
+    return response;
+  }
+
+  Future<Response> getEpisodeDetails({required int episodeId}) async {
+    final dio = await DioClient().getDio();
+    final url = "$webApiBaseUrl/api/episodes/$episodeId";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");

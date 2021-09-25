@@ -8,12 +8,16 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:tv_shows/bloc/authentication/authentication_cubit.dart';
+import 'package:tv_shows/bloc/tv_show_details_page/tv_show_details_page_cubit.dart';
 import 'package:tv_shows/bloc/tv_shows_home_page/tv_shows_home_page_cubit.dart';
 import 'package:tv_shows/core/app_config.dart';
 import 'package:tv_shows/core/localization/app_localization.dart';
 import 'package:tv_shows/data/models/tv_shows_model.dart';
+import 'package:tv_shows/data/repository/tv_shows_repository.dart';
+import 'package:tv_shows/data/web_api_service.dart';
 import 'package:tv_shows/helpers/app_colors.dart';
 import 'package:tv_shows/helpers/flushbar_helper.dart';
+import 'package:tv_shows/pages/tv_show_details_page.dart';
 import 'package:tv_shows/widgets/app_circular_progress_indicator.dart';
 
 class TvShowsHomePage extends StatefulWidget {
@@ -43,8 +47,8 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
               "assets/svg/ic-logout.svg",
               height: 32,
             ),
-            onPressed: () {
-              _askUserToSignOut();
+            onPressed: () async {
+              await _askUserToSignOut();
             },
           )
         ],
@@ -110,9 +114,23 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
                     return ListView.builder(
                       padding: EdgeInsets.symmetric(vertical: DEFAULT_CONTENT_PADDING),
                       itemBuilder: (context, index) {
+                        final tvShow = state.showsList[index];
                         return _buildTvShowListItemWidget(
-                          tvShowsModel: state.showsList[index],
-                          onPressed: () => debugPrint("aaa")
+                          tvShowsModel: tvShow,
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              platformPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (_) => TvShowDetailsPageCubit(
+                                    tvShowsRepository: context.read<TvShowsRepository>(),
+                                    tvShowId: tvShow.id
+                                  )..loadShowDetails(),
+                                  child: TvShowDetailsPage(),
+                                ),
+                                context: context
+                              )
+                            );
+                          } 
                         );
                       }, 
                       itemCount: state.showsList.length
@@ -132,7 +150,7 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
 
 
   Widget _buildTvShowListItemWidget({
-    required TvShowsModel tvShowsModel,
+    required TvShowModel tvShowsModel,
     required VoidCallback? onPressed
   }) {
     return PlatformWidgetBuilder(

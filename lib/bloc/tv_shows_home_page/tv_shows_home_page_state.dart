@@ -12,7 +12,7 @@ class TvShowsHomePageLoadingState extends TvShowsHomePageBaseState {}
 
 class TvShowsHomePageLoadedState extends TvShowsHomePageBaseState {
 
-  final List<TvShowsModel> showsList;
+  final List<TvShowModel> showsList;
 
   const TvShowsHomePageLoadedState({
     required this.showsList
