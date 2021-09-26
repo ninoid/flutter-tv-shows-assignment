@@ -1,8 +1,8 @@
-import 'package:tv_shows/data/models/api_response.dart';
-import 'package:tv_shows/data/models/episode_model.dart';
-import 'package:tv_shows/data/models/tv_show_details_model.dart';
-import 'package:tv_shows/data/models/tv_shows_model.dart';
-import 'package:tv_shows/data/web_api_service.dart';
+import '../models/api_response.dart';
+import '../models/episode_model.dart';
+import '../models/tv_show_details_model.dart';
+import '../models/tv_shows_model.dart';
+import '../web_api_service.dart';
 
 abstract class TvShowsRepository {
 

@@ -9,13 +9,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-import 'package:tv_shows/bloc/tv_show_details_page/tv_show_details_page_cubit.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/core/localization/app_localization.dart';
-import 'package:tv_shows/data/models/episode_model.dart';
-import 'package:tv_shows/helpers/app_colors.dart';
-import 'package:tv_shows/widgets/app_circular_progress_indicator.dart';
-import 'package:tv_shows/widgets/navigation_back_button.dart';
+import '../bloc/tv_show_details_page/tv_show_details_page_cubit.dart';
+import '../core/app_config.dart';
+import '../core/localization/app_localization.dart';
+import '../data/models/episode_model.dart';
+import '../helpers/app_colors.dart';
+import '../widgets/app_circular_progress_indicator.dart';
+import '../widgets/navigation_back_button.dart';
 
 class TvShowDetailsPage extends StatefulWidget {
   TvShowDetailsPage({Key? key}) : super(key: key);

@@ -6,10 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:tv_shows/bloc/show_snackbnar_listener/show_snackbar_listener_cubit.dart';
-import 'package:tv_shows/data/repository/tv_shows_repository.dart';
-import 'package:tv_shows/helpers/flushbar_helper.dart';
-import 'package:tv_shows/widgets/app_circular_progress_indicator.dart';
+import 'bloc/show_snackbnar_listener/show_snackbar_listener_cubit.dart';
+import 'data/repository/tv_shows_repository.dart';
+import 'helpers/flushbar_helper.dart';
+import 'widgets/app_circular_progress_indicator.dart';
 
 import 'bloc/application/application_cubit.dart';
 import 'bloc/authentication/authentication_cubit.dart';

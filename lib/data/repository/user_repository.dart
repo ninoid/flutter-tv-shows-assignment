@@ -2,9 +2,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:sembast/sembast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/data/models/api_response.dart';
-import 'package:tv_shows/data/web_api_service.dart';
+import '../../core/app_config.dart';
+import '../models/api_response.dart';
+import '../web_api_service.dart';
 
 import '../models/current_user_login_credentials.dart';
 

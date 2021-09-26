@@ -8,7 +8,6 @@ import '../bloc/login_page/login_page_cubit.dart';
 import '../core/app_config.dart';
 import '../core/localization/app_localization.dart';
 import '../helpers/app_colors.dart';
-import '../helpers/flushbar_helper.dart';
 import '../widgets/app_circular_progress_indicator.dart';
 
 class LoginPage extends StatefulWidget {

@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:tv_shows/data/models/api_response.dart';
-import 'package:tv_shows/data/models/episode_model.dart';
-import 'package:tv_shows/data/models/tv_show_details_model.dart';
-import 'package:tv_shows/data/repository/tv_shows_repository.dart';
+import '../../data/models/api_response.dart';
+import '../../data/models/episode_model.dart';
+import '../../data/models/tv_show_details_model.dart';
+import '../../data/repository/tv_shows_repository.dart';
 
 part 'tv_show_details_page_state.dart';
 

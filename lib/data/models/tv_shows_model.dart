@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tv_shows/data/web_api_service.dart';
+import '../web_api_service.dart';
 
 class TvShowModel {
 
