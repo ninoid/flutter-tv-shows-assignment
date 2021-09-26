@@ -6,7 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:tv_shows/bloc/show_snackbnar_listener/show_snackbar_listener_cubit.dart';
 import 'package:tv_shows/data/repository/tv_shows_repository.dart';
+import 'package:tv_shows/helpers/flushbar_helper.dart';
+import 'package:tv_shows/widgets/app_circular_progress_indicator.dart';
 
 import 'bloc/application/application_cubit.dart';
 import 'bloc/authentication/authentication_cubit.dart';
@@ -22,7 +25,7 @@ import 'pages/login_page.dart';
 import 'pages/tv_shows_home_page.dart';
 
 void main() {
-  
+
   runZonedGuarded(() async {
 
     WidgetsFlutterBinding.ensureInitialized();
@@ -52,29 +55,32 @@ void main() {
   });
 }
 
+
 class RootApp extends StatelessWidget with WidgetsBindingObserver {
 
   late final UserRepository _userRepository;
   late final TvShowsRepository _tvShowsRepository;
-  late final ApplicationCubit _applicationCubit;
-  late final AuthenticationCubit _authenticationCubit;
+  late final ApplicationCubit applicationCubit;
+  late final AuthenticationCubit authenticationCubit;
+  late final ShowSnackbarListenerCubit showSnackbarListenerCubit;
+
+  static late final RootApp sharedInstance;
+
 
   RootApp({Key? key}) : super(key: key) {
+    
+    sharedInstance = this;
 
     _userRepository = UserRepositoryImpl();
     _tvShowsRepository = TvShowsRepositoryImpl();
 
-    _authenticationCubit = AuthenticationCubit(
-      userRepository: _userRepository
-    );
-    _applicationCubit = ApplicationCubit(
-      authenticationCubit: _authenticationCubit
-    );
+    authenticationCubit = AuthenticationCubit(userRepository: _userRepository);
+    applicationCubit = ApplicationCubit(authenticationCubit: authenticationCubit);
+    showSnackbarListenerCubit = ShowSnackbarListenerCubit();
     WidgetsBinding.instance!.addObserver(this);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    _applicationCubit.applicationInitialize();
+    applicationCubit.applicationInitialize();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,10 +97,13 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<ApplicationCubit>.value(
-            value: _applicationCubit,
+            value: applicationCubit,
           ),
           BlocProvider<AuthenticationCubit>.value(
-            value: _authenticationCubit
+            value: authenticationCubit
+          ),
+          BlocProvider<ShowSnackbarListenerCubit>.value(
+            value: showSnackbarListenerCubit
           ),
         ],
         child: BlocBuilder<ApplicationCubit, ApplicationBaseState>(
@@ -111,7 +120,7 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
                 theme: AppThemes.materialLightTheme,
               ),
               cupertino: (context, platformTarget) => CupertinoAppData(
-                theme: AppThemes.cupertinoLightTheme 
+                theme: AppThemes.cupertinoLightTheme
               ),
               supportedLocales: AppConfig.supportedLocales,
               locale: appLocale,
@@ -141,47 +150,53 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
                 return supportedLocales.first;
               },
               home: PlatformScaffold(
-                body: Builder(
-                  builder: (context) {
-
-                    if (state is ApplicationInitializedState) {
-                      return BlocBuilder<AuthenticationCubit, AuthenticationState>(
-                        builder: (context, state) {
-                          
-                          if (state is AuthenticationUnauthenticatedState) {
-                            return BlocProvider(
-                              create: (_) => LoginPageCubit(
-                                userRepository: context.read<UserRepository>(),
-                                authenticationCubit: context.read<AuthenticationCubit>()
-                              )..restoreCurrentUserCredentials(),
-                              child: LoginPage(),
-                            );
-                          }
-
-                          if (state is AuthenticationAuthenticatedState) {
-                            return BlocProvider(
-                              create: (_) => TvShowsHomePageCubit(
-                                tvShowsRepository: context.read<TvShowsRepository>()
-                              )..loadShows(),
-                              child: TvShowsHomePage(),
-                            );
-                          }
-
-                          // AuthenticationCheckState
-                          return Center(
-                            child: PlatformCircularProgressIndicator(),
-                          );
-
-                        },
-                      );
-                    }
-
-                    // Application initializing state
-                    return Center(
-                      child: PlatformCircularProgressIndicator(),
+                body: BlocListener<ShowSnackbarListenerCubit, ShowSnackbarListenerState>(
+                  listener: (context, state) {
+                    AppFlushbarHelper.showFlushbar(
+                      context: context, 
+                      message: AppLocalizations.of(context).localizedString(state.message),
+                      title: state.title != null ? AppLocalizations.of(context).localizedString(state.title!) : null,
+                      durationSecodns: state.durationSeconds
                     );
-
                   },
+                  child: Builder(
+                    builder: (context) {
+                      if (state is ApplicationInitializedState) {
+                        return BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                          builder: (context, state) {
+                            if (state is AuthenticationUnauthenticatedState) {
+                              return BlocProvider(
+                                create: (_) => LoginPageCubit(
+                                  userRepository: context.read<UserRepository>(),
+                                  authenticationCubit: context.read<AuthenticationCubit>()
+                                )..restoreCurrentUserCredentials(),
+                                child: LoginPage(),
+                              );
+                            }
+
+                            if (state is AuthenticationAuthenticatedState) {
+                              return BlocProvider(
+                                create: (_) => TvShowsHomePageCubit(
+                                  tvShowsRepository: context.read<TvShowsRepository>()
+                                )..loadShows(),
+                                child: TvShowsHomePage(),
+                              );
+                            }
+
+                            // AuthenticationCheckState
+                            return Center(
+                              child: AppCircularProgressIndicator(),
+                            );
+                          },
+                        );
+                      }
+
+                      // Application initializing state
+                      return Center(
+                        child: AppCircularProgressIndicator(),
+                      );
+                    },
+                  ),
                 ),
               )
             );
@@ -189,6 +204,18 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  showSkackbar({
+    required String message,
+    String? title, 
+    int durationSeconds = 3
+  }) {
+    showSnackbarListenerCubit.emit(ShowSnackbarListenerState(
+      message: message,
+      title: title,
+      durationSeconds: durationSeconds
+    ));
   }
 
   @override
@@ -204,6 +231,4 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
     super.didChangePlatformBrightness();
     // _applicationCubit.onApplicationDidChangePlatformBrightness();
   }
-
-
 }

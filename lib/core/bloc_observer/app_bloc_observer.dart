@@ -6,7 +6,7 @@ class AppBlocObserver extends BlocObserver  {
   
   AppBlocObserver();
 
-  final _shouldDebugPrint = !kReleaseMode;
+  final _shouldDebugPrint = false; //!kReleaseMode;
 
 
   @override

@@ -12,7 +12,7 @@ class AppCircularProgressIndicator extends StatelessWidget {
   final double? materialRadius;
   final double? cupertinoRadius;
 
-  static const double materialDefaultStrokeWidth = 2;
+  static const materialDefaultStrokeWidth = 2.0;
 
   const AppCircularProgressIndicator({
     Key? key, 

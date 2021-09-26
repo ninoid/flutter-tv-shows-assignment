@@ -183,8 +183,10 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
               ),
             ),
             SizedBox(width: 20),
-            Text(
-              tvShowsModel.title
+            Expanded(
+              child: Text(
+                tvShowsModel.title
+              ),
             )
           ],
         )

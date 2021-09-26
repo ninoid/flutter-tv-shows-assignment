@@ -54,12 +54,3 @@ class LoginPageState extends LoginPageBaseState {
   ];
 
 }
-
-
-class LoginPageInformUserWithSnackbarState extends LoginPageBaseState {
-  final String message;
-  const LoginPageInformUserWithSnackbarState({required this.message});
-
-  @override
-  List<Object> get props => [message];
-}

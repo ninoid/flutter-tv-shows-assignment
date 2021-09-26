@@ -8,9 +8,8 @@ class EpisodeModel {
   final String title;
   final String description;
   final String? imageUrl;
-  final int episodeNumber;
+  final String episodeNumber;
   final String season;
-
 
   EpisodeModel({
     required this.id,
@@ -21,7 +20,7 @@ class EpisodeModel {
     required this.season,
   });
 
-
+  String get sesonEpisode => "s$season Ep$episodeNumber";
   String get imageUrlAbsolute => WebApiService.webApiBaseUrl + (imageUrl ?? "");
 
   
@@ -50,4 +49,5 @@ class EpisodeModel {
   String toJson() => json.encode(toMap());
 
   factory EpisodeModel.fromJson(String source) => EpisodeModel.fromMap(json.decode(source));
+
 }

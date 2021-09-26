@@ -32,22 +32,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginPageCubit, LoginPageBaseState>(
-      listenWhen: (previous, current) {
-        return current is LoginPageInformUserWithSnackbarState;
-      },
-      listener: (context, state) {
-        if (state is LoginPageInformUserWithSnackbarState) {
-          AppFlushbarHelper.showFlushbar(
-            context: context, 
-            message: AppLocalizations.of(context).localizedString(state.message)
-          );
-        }
-      },
-      buildWhen: (previous, current) {
-        return  current is LoginPageRestoringUserCredentialsState ||
-                current is LoginPageState;
-      },
+
+    return BlocBuilder<LoginPageCubit, LoginPageBaseState>(
+    
       builder: (context, state) {
         
         if (state is LoginPageRestoringUserCredentialsState) {
@@ -270,4 +257,5 @@ class _LoginPageState extends State<LoginPage> {
       _passwordFocusNode.unfocus();
     }
   }
+  
 }
