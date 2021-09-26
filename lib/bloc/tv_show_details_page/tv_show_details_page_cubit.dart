@@ -21,8 +21,6 @@ class TvShowDetailsPageCubit extends Cubit<TvShowDetailsPageBaseState> {
         super(TvShowDetailsPageLoadingState());
 
 
-
-
   Future<void> loadShowDetails() async {
 
     emit(TvShowDetailsPageLoadingState());
@@ -31,7 +29,7 @@ class TvShowDetailsPageCubit extends Cubit<TvShowDetailsPageBaseState> {
 
       // increase delay to show loader state
       await Future.delayed(Duration(milliseconds: 1000));
-
+      
       // run 2 futures at same moment and await both
       final webApiRequestFutures = [
         _tvShowsRepository.getWebApiShowDetails(showId: _tvShowId),
@@ -55,7 +53,7 @@ class TvShowDetailsPageCubit extends Cubit<TvShowDetailsPageBaseState> {
 
       } else {
         
-        final errorMsg = apiResultShowDetails.error ?? apiResultShowDetails.error ?? "";
+        final errorMsg = apiResultShowDetails.error ?? apiResultShowEpisodes.error ?? "";
         emit(TvShowDetailsPageErrorState(errorMessage: errorMsg));
 
       }

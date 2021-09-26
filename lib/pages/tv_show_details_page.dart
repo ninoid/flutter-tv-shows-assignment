@@ -25,249 +25,188 @@ class TvShowDetailsPage extends StatefulWidget {
 }
 
 class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
+
   @override
   Widget build(BuildContext context) {
 
-    return BlocConsumer<TvShowDetailsPageCubit, TvShowDetailsPageBaseState>(
-      listenWhen: (previous, current) {
-        return current is TvShowDetailsPageErrorState;
-      },
-      listener: (context, state) {
-        
-      },
+    return BlocBuilder<TvShowDetailsPageCubit, TvShowDetailsPageBaseState>(
       builder: (context, state) {
+
+        if (state is TvShowDetailsPageLoadedState) {
+
           return PlatformScaffold(
             body: CustomScrollView(
-              physics: state is! TvShowDetailsPageLoadedState 
-                ? NeverScrollableScrollPhysics() 
-                : BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               slivers: [
-
-                // Sliver App Bar
-                Builder(
-                  builder: (context) {
-
-                    if (state is TvShowDetailsPageLoadedState) {
-                      // return SliverAppBar(
-                      //   stretch: true,
-                      //   expandedHeight: MediaQuery.of(context).size.width,
-                        
-                      //   flexibleSpace: FlexibleSpaceBar(
-                      //     stretchModes: [
-                      //       StretchMode.zoomBackground,
-                      //       // StretchMode.blurBackground,
-                      //       // StretchMode.fadeTitle
-                      //     ],
-                      //     background: CachedNetworkImage(
-                      //       fit: BoxFit.cover,
-                      //       imageUrl: state.tvShowDetailsModel.imageUrlAbsolute,
-                      //       placeholder: (context, url) => SkeletonAnimation(
-                      //         child: Container(),
-                      //         shimmerColor: AppColors.skeletonAnimationShimmerColor
-                      //       ),
-                      //       errorWidget: (context, url, error) => Center(
-                      //         child: Icon(Icons.warning_amber_outlined, size: 32, color: AppColors.grey)
-                      //       ),
-                      //     ),
-                      //   ),
-                      //   leading: NavigationBackButton(
-                      //     onPresssed: () {
-                      //       Navigator.of(context).pop();
-                      //     },
-                      //   ),
-                      // );
-
-                      return SliverPersistentHeader(
-                        pinned: true,
-                        floating: false,
-                        delegate: NetworkingPageHeader(
-                          imageUrl: state.tvShowDetailsModel.imageUrlAbsolute, 
-                          minExtent: 60, 
-                          maxExtent: MediaQuery.of(context).size.width
-                        )
-                      );
-                    }
-
-                    return SliverAppBar(
-                      floating: false,
-                      leading: NavigationBackButton(
-                        onPresssed: () {
-                          Navigator.of(context).pop();
-                        },
-                        shouldDropShadow: true,
-                      ),
-                    );
-                  }
+                SliverPersistentHeader(
+                  pinned: true,
+                  floating: false,
+                  delegate: NetworkingPageHeader(
+                    urlImage: state.tvShowDetailsModel.imageUrlAbsolute, 
+                    minExtent: 80, 
+                    maxExtent: MediaQuery.of(context).size.width
+                  )
                 ),
-
-                Builder(
-                  builder: (context) {
-
-                    if (state is TvShowDetailsPageLoadingState) {
-                      return SliverFillRemaining(
-                        child: Center(
-                          child: AppCircularProgressIndicator()
-                        ),
-                      );
-                    }
-
-                    if (state is TvShowDetailsPageErrorState) {
-                      return SliverFillRemaining(
-                        child: GestureDetector(
-                          onTap: () {
-                            // tap to retry action
-                            context.read<TvShowDetailsPageCubit>().loadShowDetails();
-                          },
-                          child: Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Platform.isIOS 
-                                    ? CupertinoIcons.exclamationmark_triangle 
-                                    : Icons.warning_amber_outlined,
-                                  size: MediaQuery.of(context).size.width * 0.33,
-                                  color: AppColors.grey
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(24),
-                                  child: Text(
-                                    AppLocalizations.of(context).localizedString(state.errorMessage),
-                                    textAlign: TextAlign.center
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                                  child: Text(
-                                    AppLocalizations.of(context).localizedString("tap_to_retry"),
-                                    style: TextStyle(
-                                      color: AppColors.grey
-                                    ),
-                                    textAlign: TextAlign.center
-                                  ),
-                                )
-                              ],
-                            )
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: DEFAULT_CONTENT_PADDING),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(height: 18),
+                        // Title
+                        Text(
+                          state.tvShowDetailsModel.title,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600
                           ),
                         ),
-                      );
-                    }
-
-
-                    if (state is TvShowDetailsPageLoadedState) {
-                      return SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: DEFAULT_CONTENT_PADDING),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              SizedBox(height: 18),
-                                // Title
-                              Text(
-                                state.tvShowDetailsModel.title,
-                                style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w600
-                                ),
-                              ),
-                              SizedBox(height: 18),
-                              // Description
-                              Text(
-                                    state.tvShowDetailsModel.description, 
-                                    style: TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 14
-                                    ),
-                                  ),
-
-                              SizedBox(height: 24),
-                              // Episodes
-                              Row(
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context).localizedString("Episodes"), 
-                                      style: TextStyle(
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w400
-                                    ),
-                                  ),
-                                  SizedBox(width: 16),
-                                  Text(
-                                    state.showEpisodes.length.toString(), 
-                                      style: TextStyle(
-                                      fontSize: 23,
-                                      color: AppColors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              SizedBox(height: 24),
-                            ]
+                        SizedBox(height: 18),
+                        // Description
+                        Text(
+                          state.tvShowDetailsModel.description, 
+                          style: TextStyle(
+                            color: AppColors.grey,
+                            fontSize: 14
                           ),
-                        )
-                      );
-                    }
-
-                    // Should never reach here
-                    return SliverToBoxAdapter(child: Container());
-                  }
+                        ),
+                        SizedBox(height: 24),
+                        // Episodes
+                        Row(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context).localizedString("Episodes"), 
+                              style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.w400
+                              ),
+                            ),
+                            SizedBox(width: 16),
+                            Text(
+                              state.showEpisodes.length.toString(), 
+                              style: TextStyle(
+                                fontSize: 23,
+                                color: AppColors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                      ]
+                    ),
+                  )
                 ),
-
                 // add list of episodes
                 Builder(
                   builder: (context) {
 
-                    if (state is TvShowDetailsPageLoadedState) {
-                      // Show no episodes message if list is empty...
-                      if (state.showEpisodes.isEmpty) {
-                        return SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              DEFAULT_CONTENT_PADDING, 
-                              12, 
-                              DEFAULT_CONTENT_PADDING, 
-                              40
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context).localizedString("Episodes list empty :("),
-                              style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                color: AppColors.grey
-                              ),
+                    if (state.showEpisodes.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            DEFAULT_CONTENT_PADDING, 
+                            12, 
+                            DEFAULT_CONTENT_PADDING, 
+                            40
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context).localizedString("Episodes list empty :("),
+                            style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                              color: AppColors.grey
                             ),
                           ),
-                        );
-                      }
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            return _buildEpisodeListItemWidget(
-                              episode: state.showEpisodes[index], 
-                              onPressed: () {
-
-                              }
-                            );
-                          },
-                          childCount: state.showEpisodes.length,
                         ),
                       );
                     }
-                    return SliverToBoxAdapter(child: Container());
-                  }
-                )
 
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return _buildEpisodeListItemWidget(
+                            episode: state.showEpisodes[index], 
+                            onPressed: () {
+
+                            }
+                          );
+                        },
+                        childCount: state.showEpisodes.length,
+                      ),
+                    );
+                  }
+
+                )
               ],
-              
-              
             ),
           );
+
+
+      } else {
+        // show loader or tap to retry view
+        return PlatformScaffold(
+          appBar: PlatformAppBar(
+            backgroundColor: Colors.transparent,
+            leading: NavigationBackButton(
+              onPresssed: () => Navigator.of(context).pop(),
+              shouldDropShadow: true,
+            ),
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(DEFAULT_CONTENT_PADDING),
+              child: Center(
+                child: Builder(
+                  builder: (context) {
+                    if (state is TvShowDetailsPageErrorState) {
+                      return GestureDetector(
+                        onTap: () {
+                          context.read<TvShowDetailsPageCubit>().loadShowDetails();
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Platform.isIOS 
+                                ? CupertinoIcons.exclamationmark_triangle 
+                                : Icons.warning_amber_outlined,
+                              size: MediaQuery.of(context).size.width * 0.33,
+                              color: AppColors.grey
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
+                              child: Text(
+                                AppLocalizations.of(context).localizedString(state.errorMessage),
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                              child: Text(
+                                AppLocalizations.of(context).localizedString("tap_to_retry"),
+                                style: TextStyle(
+                                  color: AppColors.grey
+                                ),
+                                textAlign: TextAlign.center
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+
+                    // Loading state
+                    return AppCircularProgressIndicator();
+                  }
+                ),
+              ),
+            ),
+          ),
+        );
+      }
       }
     );
-   
   }
-    
-
 
 
   Widget _buildEpisodeListItemWidget({
@@ -320,12 +259,12 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
 class NetworkingPageHeader implements SliverPersistentHeaderDelegate {
   
   NetworkingPageHeader({
-    required this.imageUrl,
+    required this.urlImage,
     required this.minExtent,
     required this.maxExtent,
   });
 
-  String imageUrl;
+  String urlImage;
   final double minExtent;
   final double maxExtent;
 
@@ -333,52 +272,63 @@ class NetworkingPageHeader implements SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Stack(
       fit: StackFit.expand,
+      alignment: Alignment.topLeft,
       children: [
-        CachedNetworkImage(
-          fit: BoxFit.cover,
-          imageUrl: imageUrl,
-          placeholder: (context, url) => SkeletonAnimation(
-            child: Container(),
-            shimmerColor: AppColors.skeletonAnimationShimmerColor
-          ),
-          errorWidget: (context, url, error) => Center(
-            child: Icon(Icons.warning_amber_outlined, size: 32, color: AppColors.grey)
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.transparent, Colors.black54],
-              stops: [0.5, 1.0],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              tileMode: TileMode.repeated,
+        Opacity(
+          opacity: opacityForShrinkOffset(shrinkOffset),
+          child: CachedNetworkImage(
+            fit: BoxFit.cover,
+            imageUrl: urlImage,
+            placeholder: (context, url) => SkeletonAnimation(
+              child: Container(),
+              shimmerColor: AppColors.skeletonAnimationShimmerColor
+            ),
+            errorWidget: (context, url, error) => Center(
+              child: Icon(Icons.warning_amber_outlined, size: 32, color: AppColors.grey)
             ),
           ),
         ),
-        Positioned(
-          left: 16.0,
-          right: 16.0,
-          bottom: 16.0,
-          child: Text(
-            'Lorem ipsum',
-            style: TextStyle(
-              fontSize: 32.0,
-              color: Colors.white.withOpacity(titleOpacity(shrinkOffset)),
+        Opacity(
+          opacity: opacityForShrinkOffset(shrinkOffset),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.transparent, Colors.white],
+                stops: [0.2, 1.0],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                tileMode: TileMode.repeated,
+              ),
             ),
           ),
         ),
-        NavigationBackButton(
+       
+      
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                child: IntrinsicWidth(
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: NavigationBackButton(
                         onPresssed: () {
                           Navigator.of(context).pop();
                         },
-                        shouldDropShadow: true,
+                        shouldDropShadow: opacityForShrinkOffset(shrinkOffset) < 0.1,
                       ),
-      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+      ]
+        
+      
     );
   }
 
-  double titleOpacity(double shrinkOffset) {
+  double opacityForShrinkOffset(double shrinkOffset) {
     // simple formula: fade out text as soon as shrinkOffset > 0
     return 1.0 - max(0.0, shrinkOffset) / maxExtent;
     // more complex formula: starts fading out text when shrinkOffset > minExtent

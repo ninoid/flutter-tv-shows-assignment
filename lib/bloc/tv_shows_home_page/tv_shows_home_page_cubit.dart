@@ -5,7 +5,7 @@ import '../../data/repository/tv_shows_repository.dart';
 
 part 'tv_shows_home_page_state.dart';
 
-class TvShowsHomePageCubit extends Cubit<TvShowsHomePageBaseState> {
+class TvShowsHomePageCubit extends Cubit<TvShowsHomePageState> {
 
   final TvShowsRepository _tvShowsRepository;
 

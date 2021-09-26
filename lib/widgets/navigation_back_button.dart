@@ -28,9 +28,9 @@ class NavigationBackButton extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: shouldDropShadow ? Colors.grey : Colors.transparent,
+                color: shouldDropShadow ? Colors.black.withOpacity(0.33) : Colors.transparent,
                 blurRadius: 2,
-                spreadRadius: 0.2
+                spreadRadius: 0.3
               ),
             ]
           ),

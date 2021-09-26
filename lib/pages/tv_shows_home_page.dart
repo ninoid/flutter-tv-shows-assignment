@@ -14,9 +14,7 @@ import '../core/app_config.dart';
 import '../core/localization/app_localization.dart';
 import '../data/models/tv_shows_model.dart';
 import '../data/repository/tv_shows_repository.dart';
-import '../data/web_api_service.dart';
 import '../helpers/app_colors.dart';
-import '../helpers/flushbar_helper.dart';
 import 'tv_show_details_page.dart';
 import '../widgets/app_circular_progress_indicator.dart';
 
@@ -53,25 +51,9 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
           )
         ],
       ),
-      body: BlocConsumer<TvShowsHomePageCubit, TvShowsHomePageBaseState>(
-        listenWhen: (previous, current) {
-          return current is TvShowsHomePageShowSnackbarState;
-        },
-        listener: (context, state) {
-          if (state is TvShowsHomePageShowSnackbarState) {
-            AppFlushbarHelper.showFlushbar(
-              context: context, 
-              message: AppLocalizations.of(context).localizedString(state.message)
-            );
-          }
-        },
-        buildWhen: (previous, current) {
-          return  current is TvShowsHomePageLoadingState ||
-                  current is TvShowsHomePageLoadedState;
-        },
+      body: BlocBuilder<TvShowsHomePageCubit, TvShowsHomePageState>(
         builder: (context, state) {
           
-
           if (state is TvShowsHomePageLoadingState) {
 
             return Padding(

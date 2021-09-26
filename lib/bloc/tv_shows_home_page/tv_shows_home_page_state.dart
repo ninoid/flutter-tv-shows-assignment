@@ -1,16 +1,16 @@
 part of 'tv_shows_home_page_cubit.dart';
 
-abstract class TvShowsHomePageBaseState extends Equatable {
-  const TvShowsHomePageBaseState();
+abstract class TvShowsHomePageState extends Equatable {
+  const TvShowsHomePageState();
 
   @override
   List<Object> get props => [];
 }
 
-class TvShowsHomePageLoadingState extends TvShowsHomePageBaseState {}
+class TvShowsHomePageLoadingState extends TvShowsHomePageState {}
 
 
-class TvShowsHomePageLoadedState extends TvShowsHomePageBaseState {
+class TvShowsHomePageLoadedState extends TvShowsHomePageState {
 
   final List<TvShowModel> showsList;
 
@@ -23,12 +23,4 @@ class TvShowsHomePageLoadedState extends TvShowsHomePageBaseState {
 
 }
 
-
-class TvShowsHomePageShowSnackbarState extends TvShowsHomePageBaseState {
-  final String message;
-  const TvShowsHomePageShowSnackbarState({required this.message});
-
-  @override
-  List<Object> get props => [message];
-}
 
