@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tv_shows/core/app_config.dart';
+import '../../core/app_config.dart';
 
 import '../../data/models/current_user_login_credentials.dart';
 import '../../data/repository/user_repository.dart';

@@ -1,8 +1,8 @@
 
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tv_shows/core/exceptions/no_internet_exception.dart';
-import 'package:tv_shows/helpers/utils.dart';
+import '../core/exceptions/no_internet_exception.dart';
+import '../helpers/utils.dart';
 
 
 class DioClient {

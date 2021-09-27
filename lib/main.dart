@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:tv_shows/bloc/connectivity_monitor/connectivity_monitor_cubit.dart';
+import 'bloc/connectivity_monitor/connectivity_monitor_cubit.dart';
 import 'bloc/show_snackbnar_listener/show_snackbar_listener_cubit.dart';
 import 'data/repository/tv_shows_repository.dart';
 import 'helpers/flushbar_helper.dart';

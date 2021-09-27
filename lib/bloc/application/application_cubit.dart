@@ -12,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tv_shows/bloc/connectivity_monitor/connectivity_monitor_cubit.dart';
+import '../connectivity_monitor/connectivity_monitor_cubit.dart';
 import '../authentication/authentication_cubit.dart';
 import '../../core/app_config.dart';
 
