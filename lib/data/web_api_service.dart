@@ -76,6 +76,17 @@ class WebApiService {
   }
 
 
+  Future<Response> getEpisodeComments({required String episodeId}) async {
+    final dio = await DioClient().getDio();
+    final episodeIdUrlEncoded = Uri.encodeComponent(episodeId);
+    final url = "$webApiBaseUrl/api/episodes/$episodeIdUrlEncoded/comments";
+    debugPrint("WebApi request url: $url");
+    final response = await dio.get(url);
+    debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
+    return response;
+  }
+
+
  
 
 }

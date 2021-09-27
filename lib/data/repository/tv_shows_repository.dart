@@ -1,3 +1,5 @@
+import 'package:tv_shows/data/models/episode_comment_model.dart';
+
 import '../models/episode_model.dart';
 import '../models/tv_show_details_model.dart';
 import '../models/tv_shows_model.dart';
@@ -9,6 +11,7 @@ abstract class TvShowsRepository {
   Future<WebApiResult<List<TvShowModel>?>> getWebApiShows();
   Future<WebApiResult<TvShowDetailsModel>?> getWebApiShowDetails({required String showId});
   Future<WebApiResult<List<EpisodeModel>?>> getWebApiShowEpisodes({required String showId});
+  Future<WebApiResult<List<EpisodeCommentModel>?>> getWebApiEpisodeComments({required String episodeId});
 
 }
 
@@ -55,6 +58,21 @@ class TvShowsRepositoryImpl extends TvShowsRepository {
       final responseData = dioResponse.data["data"];
       if (responseData is List) {
         apiResult.result = responseData.map((element) => EpisodeModel.fromMap(element)).toList();
+      }
+      return apiResult;
+    } catch (e) {
+      return WebApiResult.fromError(e);
+    }
+  }
+
+  @override
+  Future<WebApiResult<List<EpisodeCommentModel>?>> getWebApiEpisodeComments({required String episodeId}) async {
+    try {
+      final dioResponse = await WebApiService.instance.getEpisodeComments(episodeId: episodeId);
+      final WebApiResult<List<EpisodeCommentModel>?> apiResult = WebApiResult.fromDioResponse(dioResponse); 
+      final responseData = dioResponse.data["data"];
+      if (responseData is List) {
+        apiResult.result = responseData.map((element) => EpisodeCommentModel.fromMap(element)).toList();
       }
       return apiResult;
     } catch (e) {

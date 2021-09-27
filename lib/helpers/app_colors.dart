@@ -13,7 +13,7 @@ class AppColors {
   static final red = Platform.isIOS ? CupertinoColors.systemRed : Colors.red;
   static final grey = Platform.isIOS ? CupertinoColors.systemGrey : Colors.grey;
   static const imagePlaceholderColor = Color(0xffeeeeee);
-  static final skeletonAnimationShimmerColor = Colors.white.withOpacity(0.2);
+  static final skeletonAnimationShimmerColor = Colors.white.withOpacity(0.4);
   static final flushbarBackgroundColor = Platform.isIOS ? Color(0xff323136) : Colors.grey[800]!;
  
   

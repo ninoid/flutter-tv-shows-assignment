@@ -22,3 +22,15 @@ class EpisodeCommentsPageLoadedState extends EpisodeCommentsPageState {
   @override
   List<Object> get props => [comments, postingNewCommentFlag];
 }
+
+class EpisodeCommentsPageErrorState extends EpisodeCommentsPageState {
+
+  final String errorMessage;
+
+  EpisodeCommentsPageErrorState({
+    required this.errorMessage,
+  });
+
+  @override
+  List<Object> get props => [errorMessage];
+}

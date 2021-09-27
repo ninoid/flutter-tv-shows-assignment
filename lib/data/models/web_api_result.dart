@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class WebApiResult<T> {
 
-  // Simplify parse common api response checks scenarios
+  // Simplify parse common api response fields and other checks scenarios
   // like common api response fields, error messages and similar
 
   T? result;

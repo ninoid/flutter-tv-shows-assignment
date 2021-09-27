@@ -1,15 +1,46 @@
 
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 
 class EpisodeCommentModel extends Equatable {
 
   final String id;
+  final String episodeId;
+  final String text;
+  final String userEmail;
 
   EpisodeCommentModel({
     required this.id,
+    required this.episodeId,
+    required this.text,
+    required this.userEmail,
   });
 
   @override
   List<Object?> get props => [id];
+
+
+  Map<String, dynamic> toMap() {
+    return {
+      '_id': id,
+      'episodeId': episodeId,
+      'text': text,
+      'userEmail': userEmail,
+    };
+  }
+
+  factory EpisodeCommentModel.fromMap(Map<String, dynamic> map) {
+    return EpisodeCommentModel(
+      id: map['_id'],
+      episodeId: map['episodeId'],
+      text: map['text'],
+      userEmail: map['userEmail'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory EpisodeCommentModel.fromJson(String source) => EpisodeCommentModel.fromMap(json.decode(source));
 
 }
