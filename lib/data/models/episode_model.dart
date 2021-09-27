@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 import '../web_api_service.dart';
 
-class EpisodeModel {
+class EpisodeModel extends Equatable {
 
   final String id;
   final String title;
@@ -20,7 +22,7 @@ class EpisodeModel {
     required this.season,
   });
 
-  String get sesonEpisode => "s$season Ep$episodeNumber";
+  String get sesonEpisode => "S$season Ep$episodeNumber";
   String get imageUrlAbsolute => WebApiService.webApiBaseUrl + (imageUrl ?? "");
 
   
@@ -49,5 +51,8 @@ class EpisodeModel {
   String toJson() => json.encode(toMap());
 
   factory EpisodeModel.fromJson(String source) => EpisodeModel.fromMap(json.decode(source));
+
+  @override
+  List<Object?> get props => [id];
 
 }

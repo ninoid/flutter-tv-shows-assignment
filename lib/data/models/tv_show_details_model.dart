@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 import '../web_api_service.dart';
 
-class TvShowDetailsModel {
+class TvShowDetailsModel extends Equatable{
 
   final String id;
   final String title;
@@ -50,5 +52,8 @@ class TvShowDetailsModel {
   String toJson() => json.encode(toMap());
 
   factory TvShowDetailsModel.fromJson(String source) => TvShowDetailsModel.fromMap(json.decode(source));
+
+  @override
+  List<Object?> get props => [id];
   
 }
