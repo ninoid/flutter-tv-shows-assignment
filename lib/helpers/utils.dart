@@ -1,9 +1,16 @@
 import 'dart:math';
 
+import 'data_connection_checker.dart';
+
 
 class Utils {
 
   Utils._();
+
+  
+  static Future<bool> isInternetAvailable() async {
+    return await DataConnectionChecker().hasConnection;
+  }
 
   static bool isEmailAddresValid(String emailAddress) {
     final pattern =  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';

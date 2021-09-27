@@ -47,7 +47,8 @@ class WebApiService {
 
   Future<Response> getShowDetails({required String showId}) async {
     final dio = await DioClient().getDio();
-    final url = "$webApiBaseUrl/api/shows/$showId";
+    final showIdUrlEncoded = Uri.encodeComponent(showId);
+    final url = "$webApiBaseUrl/api/shows/$showIdUrlEncoded";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
@@ -56,16 +57,18 @@ class WebApiService {
 
   Future<Response> getShowEpisodes({required String showId}) async {
     final dio = await DioClient().getDio();
-    final url = "$webApiBaseUrl/api/shows/$showId/episodes";
+    final showIdUrlEncoded = Uri.encodeComponent(showId);
+    final url = "$webApiBaseUrl/api/shows/$showIdUrlEncoded/episodes";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
     return response;
   }
 
-  Future<Response> getEpisodeDetails({required int episodeId}) async {
+  Future<Response> getEpisodeDetails({required String episodeId}) async {
     final dio = await DioClient().getDio();
-    final url = "$webApiBaseUrl/api/episodes/$episodeId";
+    final episodeIdUrlEncoded = Uri.encodeComponent(episodeId);
+    final url = "$webApiBaseUrl/api/episodes/$episodeIdUrlEncoded";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");

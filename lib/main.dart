@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:tv_shows/bloc/connectivity_monitor/connectivity_monitor_cubit.dart';
 import 'bloc/show_snackbnar_listener/show_snackbar_listener_cubit.dart';
 import 'data/repository/tv_shows_repository.dart';
 import 'helpers/flushbar_helper.dart';
@@ -61,21 +62,26 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
   late final UserRepository _userRepository;
   late final TvShowsRepository _tvShowsRepository;
   late final ApplicationCubit applicationCubit;
+  late final ConnectivityMonitorCubit connectivityMonitorCubit;
   late final AuthenticationCubit authenticationCubit;
   late final ShowSnackbarListenerCubit showSnackbarListenerCubit;
 
-  static late final RootApp sharedInstance;
+  static late final RootApp instance;
 
 
   RootApp({Key? key}) : super(key: key) {
     
-    sharedInstance = this;
+    instance = this;
 
     _userRepository = UserRepositoryImpl();
     _tvShowsRepository = TvShowsRepositoryImpl();
 
     authenticationCubit = AuthenticationCubit(userRepository: _userRepository);
-    applicationCubit = ApplicationCubit(authenticationCubit: authenticationCubit);
+    connectivityMonitorCubit = ConnectivityMonitorCubit();
+    applicationCubit = ApplicationCubit(
+      authenticationCubit: authenticationCubit,
+      connectivityMonitorCubit: connectivityMonitorCubit
+    );
     showSnackbarListenerCubit = ShowSnackbarListenerCubit();
     WidgetsBinding.instance!.addObserver(this);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -101,6 +107,9 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
           ),
           BlocProvider<AuthenticationCubit>.value(
             value: authenticationCubit
+          ),
+          BlocProvider<ConnectivityMonitorCubit>.value(
+            value: connectivityMonitorCubit
           ),
           BlocProvider<ShowSnackbarListenerCubit>.value(
             value: showSnackbarListenerCubit
@@ -222,13 +231,13 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     //Called when the system puts the app in the background or returns the app to the foreground.
     super.didChangeAppLifecycleState(state);
-    // _applicationCubit.onApplicationDidChangeLifecycleState(state);
+    applicationCubit.onApplicationDidChangeLifecycleState(state);
   }
 
   @override
   void didChangePlatformBrightness() {
     //Called when the platform brightness changes.
     super.didChangePlatformBrightness();
-    // _applicationCubit.onApplicationDidChangePlatformBrightness();
+    // applicationCubit.onApplicationDidChangePlatformBrightness();
   }
 }

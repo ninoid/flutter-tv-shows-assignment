@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 
 class WebApiResult<T> {
 
-  // Simplify parse common api response checks scenarios, like common api error messages and similar
+  // Simplify parse common api response checks scenarios
+  // like common api response fields, error messages and similar
 
   T? result;
   String? error;
@@ -12,9 +13,7 @@ class WebApiResult<T> {
 
 
   bool get isStatusCodeOk => (dioResponse?.statusCode ?? -1) == 200;
-  
-  String get errorMessage => error ?? "error_generic_something_went_wrong_localized_key";
-  
+
   // bool get hasErrors => errors?.any((errMsg) => errMsg.trim().isNotEmpty) ?? false;
   
   // String? get errorMessage  {

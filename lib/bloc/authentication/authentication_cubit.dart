@@ -31,7 +31,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }
   }
 
-
   Future<void> authenticationAuthenticate() async {
     emit(AuthenticationAuthenticatedState());
   }
@@ -39,13 +38,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   Future<void> authenticationSignOut() async {
     emit(AuthenticationUnauthenticatedState());
   }
-
-
- 
-
- 
-
-
 
 
 }

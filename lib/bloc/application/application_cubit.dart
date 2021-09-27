@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tv_shows/bloc/connectivity_monitor/connectivity_monitor_cubit.dart';
 import '../authentication/authentication_cubit.dart';
 import '../../core/app_config.dart';
 
@@ -23,12 +24,15 @@ part 'application_state.dart';
 class ApplicationCubit extends Cubit<ApplicationBaseState> {
 
   ApplicationCubit({
-    required AuthenticationCubit authenticationCubit
+    required AuthenticationCubit authenticationCubit,
+    required ConnectivityMonitorCubit connectivityMonitorCubit,
   }) : _authenticationCubit = authenticationCubit,
+       _connectivityMonitorCubit = connectivityMonitorCubit,
       super(ApplicationInitializingState());
 
 
   final AuthenticationCubit _authenticationCubit;
+  final ConnectivityMonitorCubit _connectivityMonitorCubit;
   late final PackageInfo _packageInfo;
   PackageInfo get packageInfo  => _packageInfo;
 
@@ -40,6 +44,7 @@ class ApplicationCubit extends Cubit<ApplicationBaseState> {
     final appTheme = await _initializeAppTheme();
     _packageInfo = await PackageInfo.fromPlatform(); // used for app version
     // await Future.delayed(Duration(milliseconds: 2000));
+    _connectivityMonitorCubit.checkConnectivity();
     _authenticationCubit.authenticationCheck();
     emit(ApplicationInitializedState(languageCode: languageCode, appTheme: appTheme));
   }
@@ -86,6 +91,16 @@ class ApplicationCubit extends Cubit<ApplicationBaseState> {
     await sp.setInt(APP_THEME_ID, appTheme.index);
     final currentState = state as ApplicationInitializedState;
     emit(currentState.copyWith(appTheme: appTheme));
+  }
+
+
+  void onApplicationDidChangeLifecycleState(AppLifecycleState state) {
+    debugPrint("didChangeAppLifecycleState: $state");
+    if(state == AppLifecycleState.resumed) {
+      _connectivityMonitorCubit.checkConnectivity();
+    } else {
+      _connectivityMonitorCubit.cancelConnectivityListener();
+    }
   }
 
 

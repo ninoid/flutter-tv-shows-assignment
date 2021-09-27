@@ -1,6 +1,8 @@
 
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tv_shows/core/exceptions/no_internet_exception.dart';
+import 'package:tv_shows/helpers/utils.dart';
 
 
 class DioClient {
@@ -18,12 +20,13 @@ class DioClient {
     _dio.options.followRedirects = false;
     _dio.options.connectTimeout = 30000;
     _dio.options.contentType = "application/json"; // default value
-    // _dio.options.validateStatus = (statusCode) {
-    //   return true;
-    // };
   }
 
   Future<Dio> getDio() async {
+    final isInternetAvailable = await Utils.isInternetAvailable();
+    if (!isInternetAvailable) {
+      throw NoInternetException();
+    }
     final sp = await SharedPreferences.getInstance();
     final langCode = sp.getString("langCode") ?? "en";
     _dio.options.headers = {

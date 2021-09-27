@@ -1,5 +1,5 @@
 {
-  "error_no_internet": "Please connect to the internet and try again.",
+  "No Internet Connection": "No Internet Connection",
   "error_generic_something_went_wrong_localized_key": "Whooooops, something went wrong.",
   "error_invalid_response_data_format": "Invalid response data",
   "error_connection_timeout": "Connection timed out",

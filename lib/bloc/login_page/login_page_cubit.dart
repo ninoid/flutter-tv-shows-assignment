@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tv_shows/core/app_config.dart';
 
 import '../../data/models/current_user_login_credentials.dart';
 import '../../data/repository/user_repository.dart';
@@ -46,7 +47,7 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
         _password = currentUserCredientalsModel?.password ?? "";
       }
     } catch (e) {
-      RootApp.sharedInstance.showSkackbar(
+      RootApp.instance.showSkackbar(
         message: "An error occured while restoring current user credientals."
       );
     }
@@ -110,7 +111,7 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
       if (!isSuccess) {
         loginErrorMessage = apiResult.dioResponse?.statusCode == 401 
           ? "invalid_username_or_password"
-          : apiResult.errorMessage;
+          : apiResult.error ?? ERROR_GENERIC_SOMETHING_WENT_WRONG;
       }                                                                                  
       await _userRepository.saveWebApiAuthTokenToSharedPrefs(token);
       loginSuccessful = isSuccess;
@@ -136,7 +137,7 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
       }
 
     } else {
-      RootApp.sharedInstance.showSkackbar(message: loginErrorMessage);
+      RootApp.instance.showSkackbar(message: loginErrorMessage);
       emit(currentState.copyWith(
         isLoginInProgress: false
       ));
