@@ -49,6 +49,9 @@ class _LoginPageState extends State<LoginPage> {
               _unfocusTextFields();
             },
             child: PlatformScaffold(
+              cupertino: (_,__) => CupertinoPageScaffoldData(
+                resizeToAvoidBottomInset: false
+              ),
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -253,7 +256,11 @@ class _LoginPageState extends State<LoginPage> {
                           cupertinoFilled: (_,__) => CupertinoFilledButtonData(
                             disabledColor: AppColors.grey.withOpacity(0.6)
                           ),
-                        )
+                        ),
+                        SizedBox(
+                          height: 40
+                        ),
+                        // Expanded(child: Container())
                       ],
                     ),
                   ),
