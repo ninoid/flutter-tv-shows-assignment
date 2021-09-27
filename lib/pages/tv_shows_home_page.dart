@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,48 +31,79 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
     return PlatformScaffold(
       appBar: PlatformAppBar(
         backgroundColor: Colors.white,
-        title: Text(
-          AppLocalizations.of(context).localizedString("Shows"),
-          style: TextStyle(
-            fontSize: 24
-          ),
+        title: Row(
+          children: [
+            Text(
+              AppLocalizations.of(context).localizedString("tv_shows_home_page_title"),
+              style: Theme.of(context).textTheme.headline6?.copyWith(
+                fontSize: 28,
+                fontWeight: FontWeight.w400
+              ),
+            ),
+            Expanded(child: Container())
+          ],
+        ),
+        cupertino: (_,__) => CupertinoNavigationBarData(
+          border: Border.all(color: Colors.transparent),
         ),
         trailingActions: [
-          PlatformIconButton(
-            icon: SvgPicture.asset(
-              "assets/svg/ic-logout.svg",
-              height: 32,
-            ),
-            onPressed: () async {
-              await _askUserToSignOut();
-            },
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 0.3,
+                      spreadRadius: 0.15
+                    ),
+                  ]
+                ),
+              ),
+              PlatformIconButton(
+                icon: SvgPicture.asset(
+                  "assets/svg/ic-logout.svg",
+                  height: 40,
+                ),
+                padding: EdgeInsets.zero,
+                onPressed:  () async {
+                  await _askUserToSignOut();
+                },
+              )
+            ],
           )
-        ],
+        ]
       ),
       body: BlocBuilder<TvShowsHomePageCubit, TvShowsHomePageState>(
         builder: (context, state) {
           
           if (state is TvShowsHomePageLoadingState) {
 
-            return Padding(
-              padding: const EdgeInsets.all(DEFAULT_CONTENT_PADDING),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    AppCircularProgressIndicator(
-                      materialRadius: 12,
-                      cupertinoRadius: 12,
-                    ),
-                    SizedBox(height: 12,),
-                    Text(
-                      AppLocalizations.of(context).localizedString("Loading").toUpperCase(),
-                      style: TextStyle(
-                        color: AppColors.grey
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(DEFAULT_CONTENT_PADDING),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      AppCircularProgressIndicator(
+                        materialRadius: 16,
+                        cupertinoRadius: 16,
                       ),
-                    )
-                  ],
+                      // SizedBox(height: 12,),
+                      // Text(
+                      //   AppLocalizations.of(context).localizedString("Loading").toUpperCase(),
+                      //   style: TextStyle(
+                      //     color: AppColors.grey
+                      //   ),
+                      // )
+                    ],
+                  ),
                 ),
               ),
             );
@@ -136,7 +165,7 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
     required VoidCallback? onPressed
   }) {
     return PlatformWidgetBuilder(
-      cupertino: (_, child, __) => GestureDetector(child: child, onTap: onPressed),
+      cupertino: (_, child, __) => GestureDetector(child: child, onTap: onPressed, behavior: HitTestBehavior.translucent),
       material: (_, child, __) => InkWell(child: child, onTap: onPressed),
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -147,11 +176,13 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 120,
-              width: 120 * 0.675,
+              height: 112,
+              width: 112 * 0.675,
               decoration: BoxDecoration(
-                color: AppColors.imagePlaceholderColor
+                color: AppColors.imagePlaceholderColor,
+                borderRadius: BorderRadius.circular(4),
               ),
+              clipBehavior: Clip.antiAlias,
               child: CachedNetworkImage(
                 fit: BoxFit.cover,
                 imageUrl: tvShowsModel.imageUrlAbsolute,
@@ -166,8 +197,24 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
             ),
             SizedBox(width: 20),
             Expanded(
-              child: Text(
-                tvShowsModel.title
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  tvShowsModel.title,
+                  style: platformThemeData(
+                    context, 
+                    material: (themeData) => themeData.textTheme.headline6?.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 0.5
+                    ),
+                    cupertino: (themeData) => themeData.textTheme.textStyle.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 0.1
+                    )
+                  )
+                ),
               ),
             )
           ],
@@ -177,39 +224,37 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
   }
 
   Future<void> _askUserToSignOut() async {
-    bool? shouldSignOut;
-    if (Platform.isIOS) {
-      // showPlatformModalSheet(context: context, builder: builder)
-    } else {
-      shouldSignOut = await showDialog<bool>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text(
-            AppLocalizations.of(context).localizedString("Sign out")
-          ),
-          content: Text(
-            AppLocalizations.of(context).localizedString("Are you sure you want to sign out?")
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(
-                AppLocalizations.of(context).localizedString("Cancel").toUpperCase()
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(
-                AppLocalizations.of(context).localizedString("Sign out").toUpperCase()
-              ),
-            ),
-          ],
+    await showPlatformDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (alertContext) => PlatformAlertDialog(
+        title: Text(
+          AppLocalizations.of(context).localizedString("sign_out")
         ),
-      );
-    }
-
-    if (shouldSignOut ?? false) {
-      context.read<AuthenticationCubit>().authenticationSignOut();
-    }
+        content: Text(
+          AppLocalizations.of(context).localizedString("sign_out_are_you_sure_question"),
+        ),
+        actions: <Widget>[
+          PlatformDialogAction(
+            child: PlatformText(AppLocalizations.of(context).localizedString("cancel")),
+            onPressed: () => Navigator.pop(alertContext),
+            cupertino: (_,__) => CupertinoDialogActionData(
+              isDefaultAction: true
+            ),
+          ),
+          PlatformDialogAction(
+            child: PlatformText(AppLocalizations.of(context).localizedString("ok")),
+            onPressed: () async {
+              Navigator.pop(alertContext);
+              context.read<AuthenticationCubit>().authenticationSignOut();
+            },
+            cupertino: (_,__) => CupertinoDialogActionData(
+              isDestructiveAction: true
+            ),
+          )
+        ],
+      ),
+    );
   }
+
 }

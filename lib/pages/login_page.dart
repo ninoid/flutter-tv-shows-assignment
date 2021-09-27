@@ -66,129 +66,146 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(
                           height: 50
                         ),
-                        TextFormField(
-                          initialValue: state.initialEmail,
-                          focusNode: _emailFocusNode,
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          enabled: !state.isLoginInProgress,
-                          autocorrect: false,
-                          autofocus: false,
-                          maxLength: 100,
-                          maxLines: 1,
-                          minLines: 1,
-                          cursorColor: AppColors.pink,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).localizedString("Email"),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.grey, width: 1),   
+                        Material(
+                          // Material ancestor is required for Material Widgets in Cupertino App
+                          type: MaterialType.transparency,
+                          child: TextFormField(
+                            initialValue: state.initialEmail,
+                            focusNode: _emailFocusNode,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            enabled: !state.isLoginInProgress,
+                            autocorrect: false,
+                            autofocus: false,
+                            maxLength: 100,
+                            maxLines: 1,
+                            minLines: 1,
+                            cursorColor: AppColors.pink,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context).localizedString("Email"),
+                              labelStyle: Theme.of(context).textTheme.bodyText2?.copyWith(
+                                color: AppColors.grey
+                              ),
+                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
+                              ),
+                              disabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey.withOpacity(0.75), width: 1),   
+                              ),
+                              // errorBorder: UnderlineInputBorder(
+                              //   borderSide: BorderSide(color: AppColors.red, width: 1),   
+                              // ),
+                              // focusedErrorBorder: UnderlineInputBorder(
+                              //   borderSide: BorderSide(color: AppColors.red, width: 2),   
+                              // ),
+                              counter: SizedBox.shrink(),
                             ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.grey, width: 1),   
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.grey, width: 1),   
-                            ),
-                            disabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.grey.withOpacity(0.75), width: 1),   
-                            ),
-                            // errorBorder: UnderlineInputBorder(
-                            //   borderSide: BorderSide(color: AppColors.red, width: 1),   
-                            // ),
-                            // focusedErrorBorder: UnderlineInputBorder(
-                            //   borderSide: BorderSide(color: AppColors.red, width: 2),   
-                            // ),
-                            counter: SizedBox.shrink(),
+                            onChanged: (value) {
+                              context.read<LoginPageCubit>().emailInputTextChanged(value);
+                            },
                           ),
-                          onChanged: (value) {
-                            context.read<LoginPageCubit>().emailInputTextChanged(value);
-                          },
                         ),
                         SizedBox(
                           height: 20,
                         ),
-                        TextFormField(
-                          initialValue: state.initialPassword,
-                          focusNode: _passwordFocusNode,
-                          keyboardType: TextInputType.visiblePassword,
-                          textInputAction: TextInputAction.done,
-                          obscureText: !state.showPassword,
-                          enabled: !state.isLoginInProgress,
-                          autocorrect: false,
-                          autofocus: false,
-                          maxLength: 100,
-                          maxLines: 1,
-                          minLines: 1,
-                          cursorColor: AppColors.pink,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context).localizedString("Password"),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.grey, width: 1),   
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.grey, width: 1),   
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.grey, width: 1),   
-                            ),
-                            disabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.grey.withOpacity(0.75), width: 1),   
-                            ),
-                            // errorBorder: UnderlineInputBorder(
-                            //   borderSide: BorderSide(color: AppColors.red, width: 1),   
-                            // ),
-                            // focusedErrorBorder: UnderlineInputBorder(
-                            //   borderSide: BorderSide(color: AppColors.red, width: 2),   
-                            // ),
-                            counter: SizedBox.shrink(),
-                            suffixIconConstraints: BoxConstraints(),
-                            suffixIcon: PlatformIconButton(
-                              padding: EdgeInsets.zero,
-                              material: (_,__)=> MaterialIconButtonData(
+                        Material(
+                          // Material ancestor is required for Material Widgets in Cupertino App
+                          type: MaterialType.transparency,
+                          child: TextFormField(
+                            initialValue: state.initialPassword,
+                            focusNode: _passwordFocusNode,
+                            keyboardType: TextInputType.visiblePassword,
+                            textInputAction: TextInputAction.done,
+                            obscureText: !state.showPassword,
+                            enabled: !state.isLoginInProgress,
+                            autocorrect: false,
+                            autofocus: false,
+                            maxLength: 100,
+                            maxLines: 1,
+                            minLines: 1,
+                            cursorColor: AppColors.pink,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context).localizedString("Password"),
+                              labelStyle: Theme.of(context).textTheme.bodyText2?.copyWith(
+                                color: AppColors.grey
+                              ),
+                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
+                              ),
+                              disabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: AppColors.grey.withOpacity(0.75), width: 1),   
+                              ),
+                              // errorBorder: UnderlineInputBorder(
+                              //   borderSide: BorderSide(color: AppColors.red, width: 1),   
+                              // ),
+                              // focusedErrorBorder: UnderlineInputBorder(
+                              //   borderSide: BorderSide(color: AppColors.red, width: 2),   
+                              // ),
+                              counter: SizedBox.shrink(),
+                              suffixIconConstraints: BoxConstraints(),
+                              suffixIcon: PlatformIconButton(
                                 padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                              ),
-                              icon: SvgPicture.asset(
-                                state.showPassword ? "assets/svg/ic-characters-hide.svg" : "assets/svg/ic-hide-password.svg",
-                                height: state.showPassword ? 22 : 24, // tweak height since svg different
-                                fit: BoxFit.fitHeight,
-                                color: !state.isLoginInProgress
-                                  ? AppColors.pink
-                                  : AppColors.grey.withOpacity(0.75)
-                              ),
-                              onPressed: !state.isLoginInProgress
-                                ? () {
-                                    context.read<LoginPageCubit>().showOrHidePasswordButtonPressed();
-                                    _unfocusTextFields();
-                                  }
-                                : null
-                            )
+                                material: (_,__)=> MaterialIconButtonData(
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(),
+                                ),
+                                icon: SvgPicture.asset(
+                                  state.showPassword ? "assets/svg/ic-characters-hide.svg" : "assets/svg/ic-hide-password.svg",
+                                  height: state.showPassword ? 22 : 24, // tweak height since svg different
+                                  fit: BoxFit.fitHeight,
+                                  color: !state.isLoginInProgress
+                                    ? AppColors.pink
+                                    : AppColors.grey.withOpacity(0.75)
+                                ),
+                                onPressed: !state.isLoginInProgress
+                                  ? () {
+                                      context.read<LoginPageCubit>().showOrHidePasswordButtonPressed();
+                                      _unfocusTextFields();
+                                    }
+                                  : null
+                              )
+                            ),
+                            onChanged: (value) {
+                              context.read<LoginPageCubit>().passwordInputTextChanged(value);
+                            },
                           ),
-                          onChanged: (value) {
-                            context.read<LoginPageCubit>().passwordInputTextChanged(value);
-                          },
                         ),
                         SizedBox(
                           height: 8,
                         ),
-                        CheckboxListTile(
-                          title: Text(
-                            AppLocalizations.of(context).localizedString("Remember me")
+                        Material(
+                          type: MaterialType.transparency,
+                          child: CheckboxListTile(
+                            title: Text(
+                              AppLocalizations.of(context).localizedString("Remember me")
+                            ),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            contentPadding: const EdgeInsets.all(0),
+                            dense: false,
+                            autofocus: false,
+                            activeColor: AppColors.pink,
+                            checkColor: Colors.white,
+                            value: state.isRememberMeChecked,
+                            onChanged: !state.isLoginInProgress
+                              ? (bool? newValue) {
+                                  context.read<LoginPageCubit>().rememberMeCheckboxPressed(newValue ?? false);
+                                }
+                              : null,
                           ),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          contentPadding: const EdgeInsets.all(0),
-                          dense: false,
-                          autofocus: false,
-                          activeColor: AppColors.pink,
-                          checkColor: Colors.white,
-                          value: state.isRememberMeChecked,
-                          onChanged: !state.isLoginInProgress
-                            ? (bool? newValue) {
-                                context.read<LoginPageCubit>().rememberMeCheckboxPressed(newValue ?? false);
-                              }
-                            : null,
                         ), //Check
                         SizedBox(
                           height: 32,
@@ -216,9 +233,9 @@ class _LoginPageState extends State<LoginPage> {
                               }
                               return Text(
                                 AppLocalizations.of(context).localizedString("Log In").toUpperCase(),
-                                style: TextStyle(
+                                style: Theme.of(context).textTheme.bodyText2?.copyWith(
                                   color: Colors.white,
-                                  fontSize: 14
+                                  fontSize: 16
                                 )
                               );
                             },
@@ -228,11 +245,14 @@ class _LoginPageState extends State<LoginPage> {
                             disabledElevation: 0,
                             highlightElevation: 0,
                             focusElevation: 0,
+                            disabledColor: AppColors.grey.withOpacity(0.6),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)
+                              borderRadius: BorderRadius.circular(8),
                             )
                           ),
-                          cupertinoFilled: (_,__) => CupertinoFilledButtonData(),
+                          cupertinoFilled: (_,__) => CupertinoFilledButtonData(
+                            disabledColor: AppColors.grey.withOpacity(0.6)
+                          ),
                         )
                       ],
                     ),

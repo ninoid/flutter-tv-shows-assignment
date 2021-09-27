@@ -5,6 +5,17 @@
   "error_connection_timeout": "Connection timed out",
   "session_expired": "Session expired",
   "invalid_username_or_password": "Invalid username or password",
-  "tap_to_retry": "Tap to retry"
+  "tap_to_retry": "Tap to retry",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "yes": "Yes",
+  "no": "No",
+  "done": "Done",
+  "next": "Next",
+  "skip": "Skip",
+  "sign_in": "Sign in",
+  "sign_out": "Sign out",
+  "sign_out_are_you_sure_question": "Are you sure you want to sign out?",
+  "tv_shows_home_page_title": "Shows"
 
 }
