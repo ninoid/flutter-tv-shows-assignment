@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import '../../data/models/web_api_result.dart';
+
 import '../../data/models/episode_model.dart';
 import '../../data/models/tv_show_details_model.dart';
+import '../../data/models/web_api_result.dart';
 import '../../data/repository/tv_shows_repository.dart';
 
 part 'tv_show_details_page_state.dart';

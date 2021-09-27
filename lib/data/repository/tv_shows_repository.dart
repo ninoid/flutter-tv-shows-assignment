@@ -1,7 +1,7 @@
-import '../models/web_api_result.dart';
 import '../models/episode_model.dart';
 import '../models/tv_show_details_model.dart';
 import '../models/tv_shows_model.dart';
+import '../models/web_api_result.dart';
 import '../web_api_service.dart';
 
 abstract class TvShowsRepository {

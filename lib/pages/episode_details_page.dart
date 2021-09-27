@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/core/localization/app_localization.dart';
-import 'package:tv_shows/data/models/episode_model.dart';
-import 'package:tv_shows/helpers/app_colors.dart';
-import 'package:tv_shows/widgets/url_image_page_header_app_bar.dart';
+import '../core/app_config.dart';
+import '../core/localization/app_localization.dart';
+import '../data/models/episode_model.dart';
+import '../helpers/app_colors.dart';
+import '../widgets/url_image_page_header_app_bar.dart';
 
 class EpisodeDetailsPage extends StatelessWidget {
   
