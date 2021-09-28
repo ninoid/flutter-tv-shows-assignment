@@ -118,10 +118,12 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
                 builder: (context) {
 
                   if (state.showsList.isEmpty) {
+                    // show some nice empty data view, 
+                    // eg. with image, message and tap to reload option
                     return _buildEmptyDataView();
                     
                   } else {
-
+                    // Tv Shows List
                     return ListView.builder(
                       padding: EdgeInsets.symmetric(vertical: DEFAULT_CONTENT_PADDING),
                       itemBuilder: (context, index) {
@@ -134,7 +136,7 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
                                 builder: (context) => BlocProvider(
                                   create: (_) => TvShowDetailsPageCubit(
                                     tvShowsRepository: context.read<TvShowsRepository>(),
-                                    tvShowId: tvShow.id
+                                    tvShowModel: tvShow
                                   )..loadShowDetails(),
                                   child: TvShowDetailsPage(),
                                 ),
