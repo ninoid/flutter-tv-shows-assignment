@@ -21,7 +21,7 @@ class EpisodeCommentsPage extends StatefulWidget {
   _EpisodeCommentsPageState createState() => _EpisodeCommentsPageState();
 }
 
-class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
+class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> with WidgetsBindingObserver{
 
   final _textFieldController = TextEditingController();
   final _textFieldFocusNode = FocusNode();
@@ -30,10 +30,10 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
 
   @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
     _textFieldFocusNode.addListener(() {
       if (_textFieldFocusNode.hasFocus) {
         // animate to the end of comments list when textfield receive focus
-        _scrollToEndOfCommentsListView();
       }
     });
 
@@ -42,24 +42,33 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
     _textFieldController.dispose();
     _textFieldFocusNode.dispose();
     _commentsListScrollController.dispose();
     super.dispose();
   }
 
+  @override
+  void didChangeMetrics() {
+    
+    final bottomInset = WidgetsBinding.instance!.window.viewInsets.bottom;
+    final isKeyboardVisible = bottomInset > 0.0;
+    if (isKeyboardVisible) {
+      _scrollToEndOfCommentsListView(
+        bottomInset: bottomInset
+      );
+    }
+  }
+
   void _dismissKeyboard() {
     _textFieldFocusNode.unfocus();
   }
 
-  void _scrollToEndOfCommentsListView() {
+  void _scrollToEndOfCommentsListView({double bottomInset = 0}) {
     if (_commentsListScrollController.hasClients) {
       // ensure keyboard visible inset and post textfield container height
-      debugPrint(MediaQuery.of(context).viewInsets.bottom.toString());
-      Future.delayed(Duration(milliseconds: 1000)).then((value) {
-        debugPrint(MediaQuery.of(context).viewInsets.bottom.toString());
-      });
-      final offset =  _commentsListScrollController.position.maxScrollExtent+70; 
+      var offset =  _commentsListScrollController.position.maxScrollExtent + bottomInset + 80;
       _commentsListScrollController.animateTo(
         offset, 
         duration: const Duration(milliseconds: 500), 
