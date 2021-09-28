@@ -12,6 +12,7 @@ abstract class TvShowsRepository {
   Future<WebApiResult<TvShowDetailsModel>?> getWebApiShowDetails({required String showId});
   Future<WebApiResult<List<EpisodeModel>?>> getWebApiShowEpisodes({required String showId});
   Future<WebApiResult<List<EpisodeCommentModel>?>> getWebApiEpisodeComments({required String episodeId});
+  Future<WebApiResult<EpisodeCommentModel?>> postWebApiEpisodeComment({required String episodeId, required String commentText});
 
 }
 
@@ -73,6 +74,24 @@ class TvShowsRepositoryImpl extends TvShowsRepository {
       final responseData = dioResponse.data["data"];
       if (responseData is List) {
         apiResult.result = responseData.map((element) => EpisodeCommentModel.fromMap(element)).toList();
+      }
+      return apiResult;
+    } catch (e) {
+      return WebApiResult.fromError(e);
+    }
+  }
+
+  @override
+  Future<WebApiResult<EpisodeCommentModel?>> postWebApiEpisodeComment({required String episodeId, required String commentText}) async {
+    try {
+      final dioResponse = await WebApiService.instance.postEpisodeComment(
+        episodeId: episodeId, 
+        commentText: commentText
+      );
+      final WebApiResult<EpisodeCommentModel?> apiResult = WebApiResult.fromDioResponse(dioResponse); 
+      final responseData = dioResponse.data["data"];
+      if (responseData is Map<String, dynamic>) {
+        apiResult.result = EpisodeCommentModel.fromMap(responseData);
       }
       return apiResult;
     } catch (e) {

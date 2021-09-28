@@ -5,6 +5,7 @@ import 'package:tv_shows/core/app_config.dart';
 import 'package:tv_shows/data/models/episode_comment_model.dart';
 import 'package:tv_shows/data/models/episode_model.dart';
 import 'package:tv_shows/data/repository/tv_shows_repository.dart';
+import 'package:tv_shows/main.dart';
 
 part 'episode_comments_page_state.dart';
 
@@ -20,17 +21,37 @@ class EpisodeCommentsPageCubit extends Cubit<EpisodeCommentsPageState> {
        _episodeModel = episodeModel,
        super(EpisodeCommentsPageLoadingState());
 
+
+  String _commentText = "";
+
+  void commentTextChanged(String newValue) {
+    _commentText = newValue;
+    _validateCommentTextAndUpdateState();
+  }
+
+  void _validateCommentTextAndUpdateState() {
+    final isValid = _commentText.trim().isNotEmpty;
+    final currentState = state as EpisodeCommentsPageLoadedState;
+    emit(currentState.copyWith(
+      isCommentTextValid: isValid,
+    ));
+  }
+
+
   Future<void> fetchEpisodeComments() async {
+
     emit(EpisodeCommentsPageLoadingState());
 
-    var success = false;
     try {
-      await Future.delayed(Duration(milliseconds: 5000));
-      final apiResult = await _tvShowsRepository.getWebApiEpisodeComments(episodeId: _episodeModel.id);
+      // Simulate delay to show skeleton loader effect
+      await Future.delayed(Duration(milliseconds: 3000));
+
+      final apiResult = await _tvShowsRepository.getWebApiEpisodeComments(
+        episodeId: _episodeModel.id
+      );
       if (apiResult.isStatusCodeOk && apiResult.result != null) {
-        success = true;
         emit(EpisodeCommentsPageLoadedState(
-          comments: apiResult.result!
+          comments: apiResult.result!,
         ));
       } else {
         emit(EpisodeCommentsPageErrorState(
@@ -41,7 +62,8 @@ class EpisodeCommentsPageCubit extends Cubit<EpisodeCommentsPageState> {
       emit(EpisodeCommentsPageErrorState(errorMessage: e.toString()));
     }
 
-    if (success) {
+    // check if successfully loaded from web api
+    if (state is EpisodeCommentsPageLoadedState) {
       // persist to sembast for offline mode if required
       // butt currently we will not use offline mode comments
       try {
@@ -50,5 +72,49 @@ class EpisodeCommentsPageCubit extends Cubit<EpisodeCommentsPageState> {
         debugPrint(e.toString());
       }
     }
+
+  }
+
+
+  Future<void> postEpisodeComment() async {
+
+    var currentState = state as EpisodeCommentsPageLoadedState;
+    currentState = currentState.copyWith(postingNewCommentFlag: true);
+    emit(currentState);
+
+    try {
+
+      // Simulate web api delay
+      await Future.delayed(Duration(milliseconds: 2000));
+
+      final apiResult = await _tvShowsRepository.postWebApiEpisodeComment(
+        episodeId: _episodeModel.id,
+        commentText: _commentText
+      );
+
+      if (apiResult.result != null && apiResult.dioResponse?.statusCode == 201) {
+        final newCommentsList = [...currentState.comments, apiResult.result!];
+        _commentText = "";
+        currentState = currentState.copyWith(
+          comments: newCommentsList,
+          postingNewCommentFlag: false,
+          isCommentTextValid: false
+        );
+        emit(currentState);
+        emit(EpisodeCommentsPagePostSuccessfulState());
+        emit(currentState); // revert to loaded state but not rebuid ui (buildWhen condition)
+        
+      } else {
+        final errorMsg = apiResult.error ?? ERROR_GENERIC_SOMETHING_WENT_WRONG;
+        RootApp.instance.showSkackbar(message: errorMsg);
+        emit(currentState.copyWith(postingNewCommentFlag: false));
+      }
+
+    } catch (e) {
+      debugPrint(e.toString());
+      RootApp.instance.showSkackbar(message: e.toString());
+      emit(currentState.copyWith(postingNewCommentFlag: false));
+    }
+
   }
 }

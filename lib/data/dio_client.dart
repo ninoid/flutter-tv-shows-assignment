@@ -1,6 +1,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tv_shows/core/app_config.dart';
 import '../core/exceptions/no_internet_exception.dart';
 import '../helpers/utils.dart';
 
@@ -22,16 +23,20 @@ class DioClient {
     _dio.options.contentType = "application/json"; // default value
   }
 
-  Future<Dio> getDio() async {
+  Future<Dio> getDio({bool shouldIncludeAuthorizationHeader = true}) async {
     final isInternetAvailable = await Utils.isInternetAvailable();
     if (!isInternetAvailable) {
       throw NoInternetException();
     }
-    final sp = await SharedPreferences.getInstance();
-    final langCode = sp.getString("langCode") ?? "en";
-    _dio.options.headers = {
-      "Lang": langCode,
-    };
+    if (shouldIncludeAuthorizationHeader) {
+      final sp = await SharedPreferences.getInstance();
+      final token = sp.getString(WEB_API_AUTH_TOKEN_SHARED_PREFS_KEY) ?? "";
+      final langCode = sp.getString("langCode") ?? "en";
+      _dio.options.headers = {
+        "Authorization": token,
+        "Lang": langCode,
+      };
+    }
     return _dio;
   }
   

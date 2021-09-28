@@ -22,6 +22,49 @@ class EpisodeCommentsPage extends StatefulWidget {
 }
 
 class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
+
+  final _textFieldController = TextEditingController();
+  final _textFieldFocusNode = FocusNode();
+  final _commentsListScrollController = ScrollController();
+
+
+  @override
+  void initState() {
+    _textFieldFocusNode.addListener(() {
+      if (_textFieldFocusNode.hasFocus) {
+        // animate to the end of comments list when textfield receive focus
+        _scrollToEndOfCommentsListView();
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _textFieldController.dispose();
+    _textFieldFocusNode.dispose();
+    _commentsListScrollController.dispose();
+    super.dispose();
+  }
+
+  void _dismissKeyboard() {
+    _textFieldFocusNode.unfocus();
+  }
+
+  void _scrollToEndOfCommentsListView() {
+    if (_commentsListScrollController.hasClients) {
+      // ensure keyboard visible inset and post textfield container height
+      final offset =  _commentsListScrollController.position.maxScrollExtent + 500; 
+      _commentsListScrollController.animateTo(
+        offset, 
+        duration: const Duration(milliseconds: 255), 
+        curve: Curves.easeOut
+      );
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
@@ -34,32 +77,47 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
       body: SafeArea(
         child: BlocConsumer<EpisodeCommentsPageCubit, EpisodeCommentsPageState>(
           listenWhen: (previous, current) {
-            return false;
+            return current is EpisodeCommentsPagePostSuccessfulState;
           },
           listener: (context, state) {
-            // nothing for now
+            if (state is EpisodeCommentsPagePostSuccessfulState) {
+              _textFieldController.text = "";
+              _scrollToEndOfCommentsListView();
+            }
+          },
+          buildWhen: (previous, current) {
+            if (current is EpisodeCommentsPagePostSuccessfulState) { 
+              return false; 
+            }
+            if (previous is EpisodeCommentsPagePostSuccessfulState && 
+                current is EpisodeCommentsPageLoadedState) { 
+              return false; 
+            }
+            return true;
           },
           builder: (context, state) {
 
          
             if (state is EpisodeCommentsPageErrorState) {
-              return Padding(
-                padding: const EdgeInsets.all(DEFAULT_CONTENT_PADDING),
-                child: _buildSimpleEmptyDataView(
-                  icon: Platform.isIOS 
-                    ? CupertinoIcons.exclamationmark_triangle 
-                    : Icons.warning_amber_outlined,
-                  title: AppLocalizations.of(context).localizedString(state.errorMessage),
-                  subtitle: AppLocalizations.of(context).localizedString("tap_to_retry"),
-                  onTap: () => context.read<EpisodeCommentsPageCubit>().fetchEpisodeComments()
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(DEFAULT_CONTENT_PADDING),
+                  child: _buildSimpleEmptyDataView(
+                    icon: Platform.isIOS 
+                      ? CupertinoIcons.exclamationmark_triangle 
+                      : Icons.warning_amber_outlined,
+                    title: AppLocalizations.of(context).localizedString(state.errorMessage),
+                    subtitle: AppLocalizations.of(context).localizedString("tap_to_retry"),
+                    onTap: () => context.read<EpisodeCommentsPageCubit>().fetchEpisodeComments()
+                  ),
                 ),
               );
             } 
 
-            List<EpisodeCommentModel>? commentsList;
+            EpisodeCommentsPageLoadedState? loadedState;
             bool showSkeletonLoader = true;
             if (state is EpisodeCommentsPageLoadedState) {
-              commentsList = state.comments;
+              loadedState = state;
               showSkeletonLoader = false;
             }
 
@@ -67,7 +125,7 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
               return ListView.separated(
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (_,__) {
-                  return _buildCommentRowOrSkeletonLoader(null);
+                  return _buildCommentRowOrSkeletonLoader(comment: null);
                 },
                 itemCount: 6, // some value here but it will build only visible rows
                 separatorBuilder: (_,__) {
@@ -83,122 +141,192 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
               );
             }
 
-            return Stack(
-              children: [
-                Builder(
-                  builder: (context) {
-                    
-                    if (commentsList?.isEmpty ?? true) {
-                      // Show simple empty data view with icon and message
-                      return Padding(
-                        padding: const EdgeInsets.all(DEFAULT_CONTENT_PADDING),
-                        child: _buildSimpleEmptyDataView(
-                          icon: Platform.isIOS 
-                            ? CupertinoIcons.exclamationmark_triangle 
-                            : Icons.warning_amber_outlined,
-                          title: AppLocalizations.of(context).localizedString(
-                            "No comments yet.\nBe first to add one :)"
-                          ),
-                        ),
-                      );
-                    } else {
-                      // safe to access commentsList here
-                      return ListView.separated(
-                        itemBuilder: (context, index) {
-                          return _buildCommentRowOrSkeletonLoader(commentsList![index]);
-                        },
-                        itemCount: commentsList!.length,
-                        separatorBuilder: (_,__) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: DEFAULT_CONTENT_PADDING),
-                            child: Divider( 
-                              height: 0,
-                              thickness: 0, //hairline,
-                              color: AppColors.grey.withOpacity(0.8),
-                            ),
-                          );
-                        },
-                      );
-
-                    }
-                  },
-                ),
-
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Builder(
+            return GestureDetector(
+              onTap: () => _dismissKeyboard(),
+              child: Stack(
+                children: [
+                  Builder(
                     builder: (context) {
-                      if (showSkeletonLoader) {
-                        return Container();
-                      }
-                      return TextFormField(
-                            initialValue: "asdasdasdasdasda",
-                            // focusNode: _passwordFocusNode,
-                            keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            // obscureText: !state.showPassword,
-                            // enabled: !state.isLoginInProgress,
-                            autocorrect: false,
-                            autofocus: false,
-                            maxLength: 100,
-                            maxLines: 1,
-                            minLines: 1,
-                            cursorColor: AppColors.pink,
-                            decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context).localizedString("Password"),
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
+                      if (loadedState?.comments.isEmpty ?? true) {
+                        // Show simple empty data view with icon and message
+                        return Padding(
+                            padding: const EdgeInsets.all(DEFAULT_CONTENT_PADDING),
+                            child: _buildSimpleEmptyDataView(
+                              icon: Icons.comment_outlined,
+                              title: AppLocalizations.of(context).localizedString(
+                                "No comments yet.\nBe first to add one :)"
                               ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.grey, width: 1),   
-                              ),
-                              disabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: AppColors.grey.withOpacity(0.75), width: 1),   
-                              ),
-                              // errorBorder: UnderlineInputBorder(
-                              //   borderSide: BorderSide(color: AppColors.red, width: 1),   
-                              // ),
-                              // focusedErrorBorder: UnderlineInputBorder(
-                              //   borderSide: BorderSide(color: AppColors.red, width: 2),   
-                              // ),
-                              counter: SizedBox.shrink(),
-                              // suffixIconConstraints: BoxConstraints(),
-                              // suffixIcon: PlatformIconButton(
-                              //   padding: EdgeInsets.zero,
-                              //   material: (_,__)=> MaterialIconButtonData(
-                              //     padding: EdgeInsets.zero,
-                              //     constraints: BoxConstraints(),
-                              //   ),
-                              //   icon: SvgPicture.asset(
-                              //     state.showPassword ? "assets/svg/ic-characters-hide.svg" : "assets/svg/ic-hide-password.svg",
-                              //     height: state.showPassword ? 22 : 24, // tweak height since svg different
-                              //     fit: BoxFit.fitHeight,
-                              //     color: !state.isLoginInProgress
-                              //       ? AppColors.pink
-                              //       : AppColors.grey.withOpacity(0.75)
-                              //   ),
-                              //   onPressed: !state.isLoginInProgress
-                              //     ? () {
-                              //         context.read<LoginPageCubit>().showOrHidePasswordButtonPressed();
-                              //         _unfocusTextFields();
-                              //       }
-                              //     : null
-                              // )
+                              onTap: () {
+                                if (_textFieldFocusNode.hasFocus) {
+                                  _textFieldFocusNode.unfocus();
+                                } else {
+                                  // focus to post new comment
+                                  _textFieldFocusNode.requestFocus();
+                                }
+                              }
                             ),
-                            // onChanged: (value) {
-                            //   context.read<LoginPageCubit>().passwordInputTextChanged(value);
-                            // },
                           );
-                      
-                      
+                     
+                      } else {
+                        // safe to access commentsList here
+                        final itemCount = loadedState!.postingNewCommentFlag 
+                         ?  loadedState.comments.length + 1
+                         :  loadedState.comments.length;
+                        return ListView.separated(
+                          controller: _commentsListScrollController,
+                          padding: const EdgeInsets.only(
+                            bottom: 100 // ensure comment text field container height
+                          ),
+                          itemBuilder: (context, index) {
+                            // return posting comment row
+                            if (index == loadedState!.comments.length) {
+                              return Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  DEFAULT_CONTENT_PADDING, 
+                                  24, 
+                                  DEFAULT_CONTENT_PADDING, 
+                                  0
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context).localizedString("Sending..."),
+                                  style: TextStyle(
+                                    color: AppColors.grey,
+                                    fontSize: 13
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              );
+                            }
+            
+                            // return regular comment row
+                            return _buildCommentRowOrSkeletonLoader(
+                              comment: loadedState.comments[index],
+                              onTap: () {
+                                _dismissKeyboard();
+                              }
+                            );
+                          },
+                          itemCount: itemCount,
+                          separatorBuilder: (_,__) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: DEFAULT_CONTENT_PADDING),
+                              child: Divider( 
+                                height: 0,
+                                thickness: 0, //hairline,
+                                color: AppColors.grey.withOpacity(0.8),
+                              ),
+                            );
+                          },
+                        );
+                      }
                     },
                   ),
-                ),
-              ],
+            
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Builder(
+                      builder: (context) {
+                        if (loadedState == null) {
+                          return Container();
+                        }
+                        // show post input field only when comments are successfully loaded
+                        final postButtonEnabled = loadedState.isCommentTextValid && !loadedState.postingNewCommentFlag;
+                        final textFieldEnabled = !loadedState.postingNewCommentFlag;
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: DEFAULT_CONTENT_PADDING,
+                            vertical: 6
+                          ),
+                          decoration: BoxDecoration(
+                            color: Color(0xfffefefe),
+                            border: Border(
+                              top: BorderSide(color: AppColors.grey, width: 0),
+                              bottom: BorderSide(color: AppColors.grey, width: 0)
+                            )
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 44,
+                                width: 44,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.imagePlaceholderColor,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: TextField(
+                                  controller: _textFieldController,
+                                  focusNode: _textFieldFocusNode,
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.done,
+                                  enabled: textFieldEnabled,
+                                  onChanged: (newValue) {
+                                    context.read<EpisodeCommentsPageCubit>().commentTextChanged(newValue);
+                                  },
+                                  style: TextStyle(
+                                    color: textFieldEnabled ? Colors.black : AppColors.grey
+                                  ),
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, 
+                                      vertical: 2
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 0, color: AppColors.grey),
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 0, color: AppColors.grey),
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 2, color: AppColors.pink),
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    disabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(width: 0, color: AppColors.grey.withOpacity(0.75)),
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white70,
+                                    hintStyle: TextStyle(color: AppColors.grey),
+                                    hintText: AppLocalizations.of(context).localizedString("Add a comment"),
+                                    suffixIconConstraints: BoxConstraints(),
+                                    suffixIcon: PlatformButton(
+                                      materialFlat: (_,__) => MaterialFlatButtonData(
+                                        padding: EdgeInsets.only(right: 16),
+                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                         minWidth: 0, //wraps child's width
+                                         height: 0, //wraps child's height
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context).localizedString("Post"),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: postButtonEnabled ? AppColors.pink : AppColors.grey
+                                        ),
+                                      ),
+                                      onPressed: postButtonEnabled
+                                        ? () {
+                                            _dismissKeyboard();
+                                            context.read<EpisodeCommentsPageCubit>().postEpisodeComment();
+                                          }
+                                        : null
+                                    )
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+             
+                      },
+                    ),
+                  ),
+                ],
+              ),
             );
 
 
@@ -219,6 +347,7 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
 
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.translucent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -232,7 +361,12 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
             child: Text(
               AppLocalizations.of(context).localizedString(title),
-              textAlign: TextAlign.center
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColors.grey,
+                fontWeight: FontWeight.w500
+              ),
             ),
           ),
           Builder(
@@ -244,7 +378,8 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
                   child: Text(
                     AppLocalizations.of(context).localizedString(subtitle!),
                     style: TextStyle(
-                      color: AppColors.grey
+                      fontSize: 14,
+                      color: AppColors.grey,
                     ),
                     textAlign: TextAlign.center
                   ),
@@ -259,19 +394,12 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
 
   }
 
-
-  final userSvgAvatarImagesList = [
-    "assets/svg/img-placeholder-user1.svg",
-    "assets/svg/img-placeholder-user2.svg",
-    "assets/svg/img-placeholder-user3.svg",
-  ];
-
-  Widget _buildCommentRowOrSkeletonLoader(EpisodeCommentModel? comment) {
+  Widget _buildCommentRowOrSkeletonLoader({EpisodeCommentModel? comment, VoidCallback? onTap}) {
     bool showSkeletonView = comment == null;
     final theme = Theme.of(context);
     return PlatformWidgetBuilder(
-      cupertino: (_, child, __) => GestureDetector(child: child, onTap: null),
-      material: (_, child, __) => InkWell(child: child, onTap: null),
+      cupertino: (_, child, __) => GestureDetector(child: child, onTap: onTap, behavior: HitTestBehavior.translucent,),
+      material: (_, child, __) => GestureDetector(child: child, onTap: onTap, behavior: HitTestBehavior.translucent),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: DEFAULT_CONTENT_PADDING,
@@ -285,7 +413,7 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
                 Padding(
                   padding: const EdgeInsets.all(2),
                   child: SvgPicture.asset(
-                    userSvgAvatarImagesList[Utils.randomNumber(max: userSvgAvatarImagesList.length)],
+                    comment?.userAvatarLocalSvgAssetImagePath ?? "assets/svg/img-placeholder-user1.svg",
                     height: 40,
                   ),
                 ),

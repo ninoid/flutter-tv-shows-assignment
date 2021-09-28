@@ -164,6 +164,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                   builder: (context) {
                     if (state is TvShowDetailsPageErrorState) {
                       return GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () {
                           context.read<TvShowDetailsPageCubit>().loadShowDetails();
                         },
@@ -182,8 +183,14 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
                               child: Text(
                                 AppLocalizations.of(context).localizedString(state.errorMessage),
-                                textAlign: TextAlign.center
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: AppColors.grey,
+                                  fontWeight: FontWeight.w500
+                                ),
                               ),
+                              
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),

@@ -24,7 +24,7 @@ class WebApiService {
     required String email, 
     required String password
   }) async {
-    final dio = await DioClient().getDio();
+    final dio = await DioClient().getDio(shouldIncludeAuthorizationHeader: false);
     final url = "$webApiBaseUrl/api/users/sessions";
     final data = {
       "email": email,
@@ -82,6 +82,21 @@ class WebApiService {
     final url = "$webApiBaseUrl/api/episodes/$episodeIdUrlEncoded/comments";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
+    debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
+    return response;
+  }
+
+
+  Future<Response> postEpisodeComment({required String episodeId, required String commentText}) async {
+    final dio = await DioClient().getDio();
+    final url = "$webApiBaseUrl/api/comments/";
+    debugPrint("WebApi request url: $url");
+    final data = {
+      "episodeId": episodeId,
+      "text": commentText
+    };
+    debugPrint("WebApi request data: ${data.toString()}");
+    final response = await dio.post(url, data: data);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
     return response;
   }

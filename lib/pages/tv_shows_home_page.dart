@@ -118,8 +118,8 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
                 builder: (context) {
 
                   if (state.showsList.isEmpty) {
-                    return Container();
-
+                    return _buildEmptyDataView();
+                    
                   } else {
 
                     return ListView.builder(
@@ -250,6 +250,47 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
             },
             cupertino: (_,__) => CupertinoDialogActionData(
               isDestructiveAction: true
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyDataView() {
+    return GestureDetector(
+      onTap: () => context.read<TvShowsHomePageCubit>().loadShows(),
+      behavior: HitTestBehavior.translucent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.warning_amber_outlined, // some nice empty data icon goes here :)
+            size: MediaQuery.of(context).size.width * 0.33,
+            color: AppColors.grey
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
+            child: Text(
+              AppLocalizations.of(context).localizedString("No TV Shows :("),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColors.grey,
+                fontWeight: FontWeight.w500
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: Text(
+              AppLocalizations.of(context).localizedString("Tap to reload"),
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.grey,
+              ),
+              textAlign: TextAlign.center
             ),
           )
         ],
