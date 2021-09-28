@@ -92,7 +92,6 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       AppCircularProgressIndicator(
-                        materialRadius: 14,
                         cupertinoRadius: 14,
                       ),
                       // SizedBox(height: 12,),

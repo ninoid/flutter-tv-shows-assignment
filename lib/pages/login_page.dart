@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
         
         if (state is LoginPageRestoringUserCredentialsState) {
           return Center(
-            child: PlatformCircularProgressIndicator()
+            child: AppCircularProgressIndicator()
           );
         }
 
@@ -230,6 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                               if (state.isLoginInProgress) {
                                 return AppCircularProgressIndicator(
                                   materialColor: Colors.white,
+                                  materialStrokeWidth: 2,
                                   materialRadius: 12,
                                   cupertinoRadius: 12,
                                 );

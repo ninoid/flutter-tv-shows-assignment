@@ -208,7 +208,9 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                     }
 
                     // Loading state
-                    return AppCircularProgressIndicator();
+                    return AppCircularProgressIndicator(
+                      cupertinoRadius: 14,
+                    );
                   }
                 ),
               ),
