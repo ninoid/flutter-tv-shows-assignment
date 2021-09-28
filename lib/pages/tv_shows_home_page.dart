@@ -92,8 +92,8 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       AppCircularProgressIndicator(
-                        materialRadius: 16,
-                        cupertinoRadius: 16,
+                        materialRadius: 14,
+                        cupertinoRadius: 14,
                       ),
                       // SizedBox(height: 12,),
                       // Text(
@@ -266,7 +266,7 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.warning_amber_outlined, // some nice empty data icon goes here :)
+            Icons.warning_amber_outlined, // some nice empty data image goes here :)
             size: MediaQuery.of(context).size.width * 0.33,
             color: AppColors.grey
           ),

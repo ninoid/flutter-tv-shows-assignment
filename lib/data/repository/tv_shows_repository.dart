@@ -8,7 +8,7 @@ import '../web_api_service.dart';
 
 abstract class TvShowsRepository {
 
-  Future<WebApiResult<List<TvShowModel>?>> getWebApiShows();
+  Future<WebApiResult<List<TvShowModel>?>> getWebApiTvShows();
   Future<WebApiResult<TvShowDetailsModel>?> getWebApiShowDetails({required String showId});
   Future<WebApiResult<List<EpisodeModel>?>> getWebApiShowEpisodes({required String showId});
   Future<WebApiResult<List<EpisodeCommentModel>?>> getWebApiEpisodeComments({required String episodeId});
@@ -21,7 +21,7 @@ abstract class TvShowsRepository {
 class TvShowsRepositoryImpl extends TvShowsRepository {
   
   @override
-  Future<WebApiResult<List<TvShowModel>?>> getWebApiShows() async {
+  Future<WebApiResult<List<TvShowModel>?>> getWebApiTvShows() async {
     try {
       final dioResponse = await WebApiService.instance.getShows();
       final WebApiResult<List<TvShowModel>?> apiResult = WebApiResult.fromDioResponse(dioResponse); 

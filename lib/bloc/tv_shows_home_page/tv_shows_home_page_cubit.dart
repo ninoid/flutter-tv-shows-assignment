@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tv_shows/core/app_config.dart';
+import 'package:tv_shows/main.dart';
 
 import '../../data/models/tv_shows_model.dart';
 import '../../data/repository/tv_shows_repository.dart';
@@ -20,10 +22,26 @@ class TvShowsHomePageCubit extends Cubit<TvShowsHomePageState> {
   Future<void> loadShows() async {
     emit(TvShowsHomePageLoadingState());
 
-    final apiResult = await _tvShowsRepository.getWebApiShows(); 
+    List<TvShowModel>? tvShows;
+    String errorMessage = "";
+    bool success = false;
+    try {
+      final apiResult = await _tvShowsRepository.getWebApiTvShows();
+      tvShows = apiResult.result; 
+      success = apiResult.isStatusCodeOk && apiResult.result != null;
+      if (!success) {
+        errorMessage = apiResult.error ?? ERROR_GENERIC_SOMETHING_WENT_WRONG;
+      }
+    } catch (e) {
+      errorMessage = e.toString();
+    }
 
+    if (!success) {
+      RootApp.instance.showSkackbar(message: errorMessage);
+    }
+    
     emit(TvShowsHomePageLoadedState(
-      showsList: apiResult.result ?? []
+      showsList: tvShows ?? []
     ));
 
   }

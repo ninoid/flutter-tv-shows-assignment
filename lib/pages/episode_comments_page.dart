@@ -55,10 +55,14 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
   void _scrollToEndOfCommentsListView() {
     if (_commentsListScrollController.hasClients) {
       // ensure keyboard visible inset and post textfield container height
-      final offset =  _commentsListScrollController.position.maxScrollExtent + 500; 
+      debugPrint(MediaQuery.of(context).viewInsets.bottom.toString());
+      Future.delayed(Duration(milliseconds: 1000)).then((value) {
+        debugPrint(MediaQuery.of(context).viewInsets.bottom.toString());
+      });
+      final offset =  _commentsListScrollController.position.maxScrollExtent+70; 
       _commentsListScrollController.animateTo(
         offset, 
-        duration: const Duration(milliseconds: 255), 
+        duration: const Duration(milliseconds: 500), 
         curve: Curves.easeOut
       );
     }
@@ -256,65 +260,68 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
                               ),
                               SizedBox(width: 8),
                               Expanded(
-                                child: TextField(
-                                  controller: _textFieldController,
-                                  focusNode: _textFieldFocusNode,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.done,
-                                  enabled: textFieldEnabled,
-                                  onChanged: (newValue) {
-                                    context.read<EpisodeCommentsPageCubit>().commentTextChanged(newValue);
-                                  },
-                                  style: TextStyle(
-                                    color: textFieldEnabled ? Colors.black : AppColors.grey
-                                  ),
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 16, 
-                                      vertical: 2
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: TextField(
+                                    controller: _textFieldController,
+                                    focusNode: _textFieldFocusNode,
+                                    keyboardType: TextInputType.text,
+                                    textInputAction: TextInputAction.done,
+                                    enabled: textFieldEnabled,
+                                    onChanged: (newValue) {
+                                      context.read<EpisodeCommentsPageCubit>().commentTextChanged(newValue);
+                                    },
+                                    style: TextStyle(
+                                      color: textFieldEnabled ? Colors.black : AppColors.grey
                                     ),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(width: 0, color: AppColors.grey),
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(width: 0, color: AppColors.grey),
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(width: 2, color: AppColors.pink),
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(width: 0, color: AppColors.grey.withOpacity(0.75)),
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white70,
-                                    hintStyle: TextStyle(color: AppColors.grey),
-                                    hintText: AppLocalizations.of(context).localizedString("Add a comment"),
-                                    suffixIconConstraints: BoxConstraints(),
-                                    suffixIcon: PlatformButton(
-                                      materialFlat: (_,__) => MaterialFlatButtonData(
-                                        padding: EdgeInsets.only(right: 16),
-                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                         minWidth: 0, //wraps child's width
-                                         height: 0, //wraps child's height
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16, 
+                                        vertical: 2
                                       ),
-                                      child: Text(
-                                        AppLocalizations.of(context).localizedString("Post"),
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: postButtonEnabled ? AppColors.pink : AppColors.grey
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(width: 0, color: AppColors.grey),
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(width: 0, color: AppColors.grey),
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(width: 2, color: AppColors.pink),
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      disabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(width: 0, color: AppColors.grey.withOpacity(0.75)),
+                                        borderRadius: BorderRadius.circular(100),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white70,
+                                      hintStyle: TextStyle(color: AppColors.grey),
+                                      hintText: AppLocalizations.of(context).localizedString("Add a comment"),
+                                      suffixIconConstraints: BoxConstraints(),
+                                      suffixIcon: PlatformButton(
+                                        materialFlat: (_,__) => MaterialFlatButtonData(
+                                          padding: EdgeInsets.only(right: 16),
+                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                           minWidth: 0, //wraps child's width
+                                           height: 0, //wraps child's height
                                         ),
-                                      ),
-                                      onPressed: postButtonEnabled
-                                        ? () {
-                                            _dismissKeyboard();
-                                            context.read<EpisodeCommentsPageCubit>().postEpisodeComment();
-                                          }
-                                        : null
-                                    )
+                                        child: Text(
+                                          AppLocalizations.of(context).localizedString("Post"),
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: postButtonEnabled ? AppColors.pink : AppColors.grey
+                                          ),
+                                        ),
+                                        onPressed: postButtonEnabled
+                                          ? () {
+                                              _dismissKeyboard();
+                                              context.read<EpisodeCommentsPageCubit>().postEpisodeComment();
+                                            }
+                                          : null
+                                      )
+                                    ),
                                   ),
                                 ),
                               )
