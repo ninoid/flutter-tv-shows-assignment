@@ -5,6 +5,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:tv_shows/bloc/add_new_episode_page/add_new_episode_page_cubit.dart';
+import 'package:tv_shows/data/repository/tv_shows_repository.dart';
+import 'package:tv_shows/pages/add_new_episode_page.dart';
 import 'episode_details_page.dart';
 import '../widgets/url_image_page_header_app_bar.dart';
 import '../bloc/tv_show_details_page/tv_show_details_page_cubit.dart';
@@ -14,6 +18,7 @@ import '../data/models/episode_model.dart';
 import '../helpers/app_colors.dart';
 import '../widgets/app_circular_progress_indicator.dart';
 import '../widgets/navigation_back_button.dart';
+
 
 class TvShowDetailsPage extends StatefulWidget {
   TvShowDetailsPage({Key? key}) : super(key: key);
@@ -33,115 +38,139 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
         if (state is TvShowDetailsPageLoadedState) {
 
           return PlatformScaffold(
-            body: CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: [
-                SliverPersistentHeader(
-                  pinned: true,
-                  floating: false,
-                  delegate: UrlImagePageHeaderAppBar(
-                    urlImage: state.tvShowDetailsModel.imageUrlAbsolute, 
-                    minExtent: 80, 
-                    maxExtent: MediaQuery.of(context).size.width
-                  )
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: DEFAULT_CONTENT_PADDING),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(height: 18),
-                        // Title
-                        Text(
-                          state.tvShowDetailsModel.title,
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w600
-                          ),
-                        ),
-                        SizedBox(height: 18),
-                        // Description
-                        Text(
-                          state.tvShowDetailsModel.description, 
-                          style: TextStyle(
-                            color: AppColors.grey,
-                            fontSize: 14
-                          ),
-                        ),
-                        SizedBox(height: 24),
-                        // Episodes
-                        Row(
-                          children: [
-                            Text(
-                              AppLocalizations.of(context).localizedString("Episodes"), 
-                              style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.w400
-                              ),
-                            ),
-                            SizedBox(width: 16),
-                            Text(
-                              state.showEpisodes.length.toString(), 
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: AppColors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-                      ]
+            
+            
+            material: (_, __) => MaterialScaffoldData(
+              // for iOS we will use stack and bottomRight safe area position
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  _navigateToAddNewEpisodePage(context);
+                },
+                child: const Icon(Icons.add, color: Colors.white),
+                backgroundColor: AppColors.pink,
+              ),
+            ),
+            body: Stack(
+              children: [
+                CustomScrollView(
+                  physics: BouncingScrollPhysics(),
+                  slivers: [
+                    SliverPersistentHeader(
+                      pinned: true,
+                      floating: false,
+                      delegate: UrlImagePageHeaderAppBar(
+                        urlImage: state.tvShowDetailsModel.imageUrlAbsolute, 
+                        minExtent: 80, 
+                        maxExtent: MediaQuery.of(context).size.width
+                      )
                     ),
-                  )
-                ),
-                // add list of episodes
-                Builder(
-                  builder: (context) {
-
-                    if (state.showEpisodes.isEmpty) {
-                      return SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            DEFAULT_CONTENT_PADDING, 
-                            12, 
-                            DEFAULT_CONTENT_PADDING, 
-                            40
-                          ),
-                          child: Text(
-                            AppLocalizations.of(context).localizedString("Episodes list empty :("),
-                            style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                              color: AppColors.grey
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: DEFAULT_CONTENT_PADDING),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(height: 18),
+                            // Title
+                            Text(
+                              state.tvShowDetailsModel.title,
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w600
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    }
-
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return _buildEpisodeListItemWidget(
-                            episode: state.showEpisodes[index], 
-                            onPressed: () {
-                              Navigator.of(context).push(
-                              platformPageRoute(
-                                builder: (context) => EpisodeDetailsPage(
-                                  episodeModel: state.showEpisodes[index]
+                            SizedBox(height: 18),
+                            // Description
+                            Text(
+                              state.tvShowDetailsModel.description, 
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontSize: 14
+                              ),
+                            ),
+                            SizedBox(height: 24),
+                            // Episodes
+                            Row(
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context).localizedString("Episodes"), 
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w400
+                                  ),
                                 ),
-                                context: context
-                              )
-                            );
-                            }
+                                SizedBox(width: 16),
+                                Text(
+                                  state.showEpisodes.length.toString(), 
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    color: AppColors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                          ]
+                        ),
+                      )
+                    ),
+                    // add list of episodes
+                    Builder(
+                      builder: (context) {
+              
+                        if (state.showEpisodes.isEmpty) {
+                          return SliverToBoxAdapter(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                DEFAULT_CONTENT_PADDING, 
+                                12, 
+                                DEFAULT_CONTENT_PADDING, 
+                                40
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context).localizedString("Episodes list empty :("),
+                                style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                  color: AppColors.grey
+                                ),
+                              ),
+                            ),
                           );
-                        },
-                        childCount: state.showEpisodes.length,
-                      ),
-                    );
-                  }
+                        }
+              
+                        return SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return _buildEpisodeListItemWidget(
+                                episode: state.showEpisodes[index], 
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                  platformPageRoute(
+                                    builder: (context) => EpisodeDetailsPage(
+                                      episodeModel: state.showEpisodes[index]
+                                    ),
+                                    context: context
+                                  )
+                                );
+                                }
+                              );
+                            },
+                            childCount: state.showEpisodes.length,
+                          ),
+                        );
+                      }
+              
+                    )
+                  ],
+                ),
 
-                )
-              ],
+                Platform.isIOS 
+                  ? Positioned(
+                      bottom: MediaQuery.of(context).padding.bottom + DEFAULT_CONTENT_PADDING,
+                      right: MediaQuery.of(context).padding.right + DEFAULT_CONTENT_PADDING,
+                      child: _iOSFabButton(),
+                    )
+                  : Container()
+              ]
             ),
           );
 
@@ -265,4 +294,55 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
       ),
     );
   }
+
+  Widget _iOSFabButton() {
+    const size = 50.0;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          height: size,
+          decoration: BoxDecoration(
+            color: Colors.pink,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.33),
+                blurRadius: 2,
+                spreadRadius: 0.3
+              ),
+            ]
+          ),
+        ),
+        CupertinoButton.filled(
+          child: SvgPicture.asset(
+            "assets/svg/ic-fab-button.svg",
+            height: size,
+          ),
+          padding: EdgeInsets.zero,
+          borderRadius: BorderRadius.circular(size/2),
+          onPressed: () {
+            _navigateToAddNewEpisodePage(context);
+          },
+        )
+      ],
+    );
+  } 
+
+  void _navigateToAddNewEpisodePage(BuildContext ctx) {
+    Navigator.of(context).push(
+      platformPageRoute(
+        builder: (context) => BlocProvider(
+          create: (_) => AddNewEpisodePageCubit(
+            tvShowsRepository: context.read<TvShowsRepository>(),
+            tvShowDetailsPageCubit: ctx.read<TvShowDetailsPageCubit>(),
+          ),
+          child: AddNewEpisodePage(),
+        ),
+        context: context
+      )
+    );
+  }
+
+
 }

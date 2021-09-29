@@ -12,7 +12,12 @@ class WebApiResult<T> {
   Response? dioResponse;
 
 
-  bool get isStatusCodeOk => (dioResponse?.statusCode ?? -1) == 200;
+  // bool get isStatusCodeOk => (dioResponse?.statusCode ?? -1) == 200;
+  
+  bool get isStatusCodeOk {
+    final statusCode = (dioResponse?.statusCode ?? -1);
+    return [200, 201, 202, 203].any((e) => e == statusCode);
+  }
 
   // bool get hasErrors => errors?.any((errMsg) => errMsg.trim().isNotEmpty) ?? false;
   

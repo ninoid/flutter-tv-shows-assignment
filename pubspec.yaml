@@ -46,6 +46,8 @@ dependencies:
   image_picker: ^0.8.3+2
   another_flushbar: ^1.10.24
   skeleton_text: ^3.0.0
+  flutter_picker: ^2.0.2
+  # pull_to_refresh: ^2.0.0
 
 
 

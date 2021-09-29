@@ -24,14 +24,20 @@ class TvShowDetailsPageCubit extends Cubit<TvShowDetailsPageBaseState> {
         super(TvShowDetailsPageLoadingState());
 
 
-  Future<void> loadShowDetails() async {
+  TvShowModel get tvShowModel => _tvShowModel;
+
+
+
+  Future<void> loadShowDetails({
+    bool restoreFromCacheIfWebApiFails = false, 
+    bool simulateDelay = false
+  }) async {
 
     emit(TvShowDetailsPageLoadingState());
 
-
     try {
       // simulate delay to show loader state
-      await Future.delayed(Duration(milliseconds: 2000));
+      await Future.delayed(Duration(milliseconds: simulateDelay ? 2000 : 0));
       
       // run 2 futures at same moment and await them both
       final webApiRequestFutures = await Future.wait([

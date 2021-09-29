@@ -10,34 +10,38 @@ class DioClient {
   
   static final DioClient _singleton = DioClient._internal();
 
-  late Dio _dio;
-
   factory DioClient() {
     return _singleton;
   }
 
-  DioClient._internal() {
-    _dio = new Dio();
-    _dio.options.followRedirects = false;
-    _dio.options.connectTimeout = 30000;
-    _dio.options.contentType = "application/json"; // default value
-  }
+  DioClient._internal();
 
-  Future<Dio> getDio({bool shouldIncludeAuthorizationHeader = true}) async {
+
+  Future<Dio> getDio({
+    bool shouldIncludeAuthorizationHeader = true,
+    String contentType = Headers.jsonContentType,
+    int connectTimeout = 30000
+  }) async {
+
+    final dio = Dio();
+    dio.options.contentType = contentType;
+    dio.options.connectTimeout = connectTimeout;
+
     final isInternetAvailable = await Utils.isInternetAvailable();
     if (!isInternetAvailable) {
       throw NoInternetException();
     }
+
     if (shouldIncludeAuthorizationHeader) {
       final sp = await SharedPreferences.getInstance();
       final token = sp.getString(WEB_API_AUTH_TOKEN_SHARED_PREFS_KEY) ?? "";
       final langCode = sp.getString("langCode") ?? "en";
-      _dio.options.headers = {
+      dio.options.headers = {
         "Authorization": token,
         "Lang": langCode,
       };
     }
-    return _dio;
+    return dio;
   }
   
 }

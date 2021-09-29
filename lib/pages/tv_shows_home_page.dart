@@ -136,7 +136,7 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
                                   create: (_) => TvShowDetailsPageCubit(
                                     tvShowsRepository: context.read<TvShowsRepository>(),
                                     tvShowModel: tvShow
-                                  )..loadShowDetails(),
+                                  )..loadShowDetails(simulateDelay: true),
                                   child: TvShowDetailsPage(),
                                 ),
                                 context: context
