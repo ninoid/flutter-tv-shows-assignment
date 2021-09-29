@@ -95,7 +95,7 @@ class UserRepositoryImpl extends UserRepository {
     final sp = await SharedPreferences.getInstance();
     await Future.wait([
       sp.remove(WEB_API_AUTH_TOKEN_SHARED_PREFS_KEY),
-      removeCurrentUserLoginCredientalsModel()
+      // removeCurrentUserLoginCredientalsModel()
     ]);
   }
 

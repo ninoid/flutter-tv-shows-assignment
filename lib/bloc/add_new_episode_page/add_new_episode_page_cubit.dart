@@ -89,7 +89,7 @@ class AddNewEpisodePageCubit extends Cubit<AddNewEpisodePageBaseState> {
     ));
     
     // add some delay for test :)
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(milliseconds: 1000));
 
     bool success = false;
     String? errorMessage;

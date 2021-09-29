@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../core/app_config.dart';
 import '../../data/models/tv_shows_model.dart';
@@ -20,8 +21,9 @@ class TvShowsHomePageCubit extends Cubit<TvShowsHomePageState> {
 
 
   Future<void> loadShows() async {
-    emit(TvShowsHomePageLoadingState());
 
+    emit(TvShowsHomePageLoadingState());
+    
     List<TvShowModel>? tvShows;
     String errorMessage = "";
     bool success = false;
@@ -31,6 +33,8 @@ class TvShowsHomePageCubit extends Cubit<TvShowsHomePageState> {
       success = apiResult.isStatusCodeOk && apiResult.result != null;
       if (!success) {
         errorMessage = apiResult.error ?? ERROR_GENERIC_SOMETHING_WENT_WRONG;
+        // try restore from local store - offline mode
+        tvShows = await _tryGetTvShowsFromLocalStore();
       }
     } catch (e) {
       errorMessage = e.toString();
@@ -38,11 +42,32 @@ class TvShowsHomePageCubit extends Cubit<TvShowsHomePageState> {
 
     if (!success) {
       RootApp.instance.showSkackbar(message: errorMessage);
+    } else {
+      await _trySaveTvShowToLocalStore(tvShows!);
     }
     
     emit(TvShowsHomePageLoadedState(
       showsList: tvShows ?? []
     ));
 
+  }
+
+  Future<void> _trySaveTvShowToLocalStore(List<TvShowModel> tvShows) async {
+    debugPrint("Saving to Sembast db");
+    try {
+      await _tvShowsRepository.saveTvShowsToLocalStore(tvShows);
+      debugPrint("Tv shows saved to Sembast NoSQL db");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<List<TvShowModel>?> _tryGetTvShowsFromLocalStore() async {
+    debugPrint("Reading Tv Shows from Sembast db");
+    try {
+      return await _tvShowsRepository.getLocalStoreTvShows();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

@@ -65,6 +65,9 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
                   title: Text(
                     AppLocalizations.of(context).localizedString("Add episode")
                   ),
+                  cupertino: (_, __) => CupertinoNavigationBarData(
+                    backgroundColor: Colors.white
+                  ),
                   leading: Platform.isIOS 
                     ? CupertinoButton(
                         child: Text(
@@ -76,7 +79,8 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
                         onPressed: uiDisabled 
                           ? null 
                           : () => Navigator.of(context).pop(),
-                    )
+                          padding: const EdgeInsets.all(0)
+                      )
                     : IconButton(
                         icon: Icon(
                           Icons.chevron_left,
@@ -90,7 +94,7 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
                     uiDisabled // show spinner if saving to api
                       ? Center(
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 24),
+                            padding: EdgeInsets.only(right: Platform.isIOS ? 12 : 24),
                             child: AppCircularProgressIndicator(
                               materialRadius: 9,
                               materialStrokeWidth: 2,
@@ -100,6 +104,9 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
                         )
                         // show regular add platform button
                       : PlatformButton(
+                          cupertino: (_, __) => CupertinoButtonData(
+                            padding: const EdgeInsets.all(0)
+                          ),
                           child: Text(
                             AppLocalizations.of(context).localizedString("Add"),
                             style: TextStyle(
@@ -242,7 +249,7 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
                                       cupertino: (_, child, __) => GestureDetector(
                                         child: child, 
                                         onTap: uiDisabled ? null : _showSeasonEpisodePicker, 
-                                        behavior: HitTestBehavior.translucent
+                                        behavior: HitTestBehavior.opaque
                                       ),
                                       material: (_, child, __) => InkWell( // show tap ripple for material
                                         child: child, 
@@ -371,7 +378,7 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
         );
       },
       hideHeader: Platform.isAndroid,
-      // height: 300,
+      height: Platform.isIOS ? 290 : 270,
       // containerColor: Colors.white,
       // headerColor: Colors.white,
       title: Text(
@@ -384,7 +391,13 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
     );
 
     // show picker: modal on iOS
-    picker.showDialog(context);
+    if (Platform.isIOS) {
+      picker.showModal(context);
+    } else {
+      picker.showDialog(context);
+    }
+    
+    
     
   }
 

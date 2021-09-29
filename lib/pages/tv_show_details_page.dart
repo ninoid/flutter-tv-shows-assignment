@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import '../bloc/add_new_episode_page/add_new_episode_page_cubit.dart';
 import '../data/repository/tv_shows_repository.dart';
 import 'add_new_episode_page.dart';
@@ -301,23 +300,25 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
       alignment: Alignment.center,
       children: [
         Container(
+          width: size,
           height: size,
           decoration: BoxDecoration(
-            color: Colors.pink,
+            color: AppColors.pink,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.33),
-                blurRadius: 2,
-                spreadRadius: 0.3
+                color: Colors.grey.withOpacity(0.125),
+                spreadRadius: 0.1,
+                blurRadius: 0.5,
               ),
             ]
           ),
         ),
         CupertinoButton.filled(
-          child: SvgPicture.asset(
-            "assets/svg/ic-fab-button.svg",
+          child: Container(
             height: size,
+            width: size,
+            child: const Icon(Icons.add, color: Colors.white, size: 24),
           ),
           padding: EdgeInsets.zero,
           borderRadius: BorderRadius.circular(size/2),
