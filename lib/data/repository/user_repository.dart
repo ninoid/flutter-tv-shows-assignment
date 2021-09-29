@@ -23,6 +23,8 @@ abstract class UserRepository {
 
   Future<void> removeCurrentUserLoginCredientalsModel();
 
+  Future<void> clearAllAuthenticationCache();
+
 }
 
 class UserRepositoryImpl extends UserRepository {
@@ -84,6 +86,17 @@ class UserRepositoryImpl extends UserRepository {
       return WebApiResult.fromError(e);
     }
 
+  }
+
+
+  // On UnAuthenticate/SignOut
+  @override
+  Future<void> clearAllAuthenticationCache() async {
+    final sp = await SharedPreferences.getInstance();
+    await Future.wait([
+      sp.remove(WEB_API_AUTH_TOKEN_SHARED_PREFS_KEY),
+      removeCurrentUserLoginCredientalsModel()
+    ]);
   }
 
 

@@ -8,6 +8,9 @@ const String LANG_CODE = "lang_code";
 const String APP_THEME_ID = "app_theme_id";
 const String WEB_API_AUTH_TOKEN_SHARED_PREFS_KEY = "web_api_auth_token";
 const String ERROR_GENERIC_SOMETHING_WENT_WRONG = "error_generic_something_went_wrong_localized_key";
+const String TV_SHOWS_RECORD_ID = "tv_shows";
+const String TV_SHOW_DETAILS_STORE_NAME = "tv_show_details";
+const String EPISODE_COMMENTS_STORE_NAME = "episode_comments";
 
 
 class AppConfig {

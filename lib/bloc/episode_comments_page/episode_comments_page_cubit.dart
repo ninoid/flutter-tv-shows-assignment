@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+
 import '../../core/app_config.dart';
 import '../../data/models/episode_comment_model.dart';
 import '../../data/models/episode_model.dart';

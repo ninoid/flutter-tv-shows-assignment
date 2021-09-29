@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-import '../helpers/app_colors.dart';
 
+import '../helpers/app_colors.dart';
 import 'navigation_back_button.dart';
 
 class UrlImagePageHeaderAppBar implements SliverPersistentHeaderDelegate {

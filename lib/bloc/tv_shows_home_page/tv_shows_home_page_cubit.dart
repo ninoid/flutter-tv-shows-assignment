@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../core/app_config.dart';
-import '../../main.dart';
 
+import '../../core/app_config.dart';
 import '../../data/models/tv_shows_model.dart';
 import '../../data/repository/tv_shows_repository.dart';
+import '../../main.dart';
 
 part 'tv_shows_home_page_state.dart';
 

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import '../../data/repository/tv_shows_repository.dart';
 
 import '../../data/repository/user_repository.dart';
 
@@ -11,11 +12,13 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   
   AuthenticationCubit({
     required UserRepository userRepository,
+    required TvShowsRepository tvShowsRepository
   }) :  _userRepository = userRepository,
+        _tvShowsRepository = tvShowsRepository,
         super(AuthenticationCheckState()) ;
 
   final UserRepository _userRepository;
-
+  final TvShowsRepository _tvShowsRepository;
 
   bool get isAuthenticated => state is AuthenticationAuthenticatedState;
 
@@ -27,7 +30,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     if (isOk) {
       emit(AuthenticationAuthenticatedState());
     } else {
-      emit(AuthenticationUnauthenticatedState());
+      await _unauthenticate();
     }
   }
 
@@ -35,9 +38,14 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationAuthenticatedState());
   }
 
-  Future<void> authenticationSignOut() async {
-    emit(AuthenticationUnauthenticatedState());
+  Future<void> authenticationUnauthenticate() async {
+    await _unauthenticate();
   }
 
+  Future<void> _unauthenticate() async {
+    await _userRepository.clearAllAuthenticationCache();
+    await _tvShowsRepository.deleteAllLocalStoreCache();
+    emit(AuthenticationUnauthenticatedState());
+  }
 
 }

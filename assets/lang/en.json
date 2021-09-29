@@ -1,6 +1,6 @@
 {
   "No Internet Connection": "No Internet Connection",
-  "error_generic_something_went_wrong_localized_key": "Whooooops, something went wrong.",
+  "error_generic_something_went_wrong_localized_key": "Something went wrong.",
   "error_invalid_response_data_format": "Invalid response data",
   "error_connection_timeout": "Connection timed out",
   "session_expired": "Session expired",

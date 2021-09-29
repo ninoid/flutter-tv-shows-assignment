@@ -248,7 +248,7 @@ class _TvShowsHomePageState extends State<TvShowsHomePage> {
             child: PlatformText(AppLocalizations.of(context).localizedString("ok")),
             onPressed: () async {
               Navigator.pop(alertContext);
-              context.read<AuthenticationCubit>().authenticationSignOut();
+              context.read<AuthenticationCubit>().authenticationUnauthenticate();
             },
             cupertino: (_,__) => CupertinoDialogActionData(
               isDestructiveAction: true

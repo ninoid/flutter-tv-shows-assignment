@@ -76,7 +76,10 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
     _userRepository = UserRepositoryImpl();
     _tvShowsRepository = TvShowsRepositoryImpl();
 
-    authenticationCubit = AuthenticationCubit(userRepository: _userRepository);
+    authenticationCubit = AuthenticationCubit(
+      userRepository: _userRepository,
+      tvShowsRepository: _tvShowsRepository
+    );
     connectivityMonitorCubit = ConnectivityMonitorCubit();
     applicationCubit = ApplicationCubit(
       authenticationCubit: authenticationCubit,
@@ -171,7 +174,16 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
                   child: Builder(
                     builder: (context) {
                       if (state is ApplicationInitializedState) {
-                        return BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                        return BlocConsumer<AuthenticationCubit, AuthenticationState>(
+                          listener:  (context, state) {
+                            if (state is AuthenticationUnauthenticatedState) {
+                              // close any presented screens if they exists
+                              final navigator = Navigator.of(context);
+                              while(navigator.canPop()) {
+                                navigator.pop();
+                              }
+                            }
+                          },
                           builder: (context, state) {
                             if (state is AuthenticationUnauthenticatedState) {
                               return BlocProvider(
@@ -215,7 +227,7 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
     );
   }
 
-  showSkackbar({
+  void showSkackbar({
     required String message,
     String? title, 
     int durationSeconds = 3
@@ -225,6 +237,10 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
       title: title,
       durationSeconds: durationSeconds
     ));
+  }
+
+  Future<void> signOut() async {
+    await authenticationCubit.authenticationUnauthenticate();
   }
 
   @override

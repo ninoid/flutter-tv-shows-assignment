@@ -127,6 +127,7 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
                         PlatformButton(
                           onPressed: uiDisabled ? null : _showImagePicker,
                           materialFlat: (_,__) => MaterialFlatButtonData(),
+                          padding: const EdgeInsets.all(0),
                           child: AspectRatio(
                             aspectRatio: 2,
                             child: (state.coverImageFilePath??"").isEmpty
