@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:tv_shows/bloc/tv_show_details_page/tv_show_details_page_cubit.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/data/models/add_new_episode_web_api_request_model.dart';
-import 'package:tv_shows/data/models/tv_shows_model.dart';
-import 'package:tv_shows/data/repository/tv_shows_repository.dart';
-import 'package:tv_shows/main.dart';
+import '../tv_show_details_page/tv_show_details_page_cubit.dart';
+import '../../core/app_config.dart';
+import '../../data/models/add_new_episode_web_api_request_model.dart';
+import '../../data/models/tv_shows_model.dart';
+import '../../data/repository/tv_shows_repository.dart';
+import '../../main.dart';
 
 part 'add_new_episode_page_state.dart';
 

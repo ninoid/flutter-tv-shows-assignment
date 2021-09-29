@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/main.dart';
+import '../../core/app_config.dart';
+import '../../main.dart';
 
 import '../../data/models/tv_shows_model.dart';
 import '../../data/repository/tv_shows_repository.dart';

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:tv_shows/data/models/add_new_episode_web_api_request_model.dart';
+import 'models/add_new_episode_web_api_request_model.dart';
 
 import 'dio_client.dart';
 

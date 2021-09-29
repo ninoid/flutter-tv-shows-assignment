@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:tv_shows/helpers/utils.dart';
+import '../../helpers/utils.dart';
 
 class EpisodeCommentModel extends Equatable {
 
@@ -23,7 +23,7 @@ class EpisodeCommentModel extends Equatable {
   List<Object?> get props => [id];
 
   
-  int? _userAvatarImageNumber;
+  late final int? _userAvatarImageNumber;
   
   String get userAvatarLocalSvgAssetImagePath {
     _userAvatarImageNumber ??= Utils.randomNumber(min: 1, max: 3+1);

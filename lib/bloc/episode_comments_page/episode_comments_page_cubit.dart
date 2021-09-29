@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/data/models/episode_comment_model.dart';
-import 'package:tv_shows/data/models/episode_model.dart';
-import 'package:tv_shows/data/repository/tv_shows_repository.dart';
-import 'package:tv_shows/main.dart';
+import '../../core/app_config.dart';
+import '../../data/models/episode_comment_model.dart';
+import '../../data/models/episode_model.dart';
+import '../../data/repository/tv_shows_repository.dart';
+import '../../main.dart';
 
 part 'episode_comments_page_state.dart';
 

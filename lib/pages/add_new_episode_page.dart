@@ -7,11 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tv_shows/bloc/add_new_episode_page/add_new_episode_page_cubit.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/core/localization/app_localization.dart';
-import 'package:tv_shows/helpers/app_colors.dart';
-import 'package:tv_shows/widgets/app_circular_progress_indicator.dart';
+import '../bloc/add_new_episode_page/add_new_episode_page_cubit.dart';
+import '../core/app_config.dart';
+import '../core/localization/app_localization.dart';
+import '../helpers/app_colors.dart';
+import '../widgets/app_circular_progress_indicator.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 
 class AddNewEpisodePage extends StatefulWidget {

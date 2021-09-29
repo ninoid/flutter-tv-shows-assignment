@@ -7,12 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-import 'package:tv_shows/bloc/episode_comments_page/episode_comments_page_cubit.dart';
-import 'package:tv_shows/core/app_config.dart';
-import 'package:tv_shows/core/localization/app_localization.dart';
-import 'package:tv_shows/data/models/episode_comment_model.dart';
-import 'package:tv_shows/helpers/app_colors.dart';
-import 'package:tv_shows/helpers/utils.dart';
+import '../bloc/episode_comments_page/episode_comments_page_cubit.dart';
+import '../core/app_config.dart';
+import '../core/localization/app_localization.dart';
+import '../data/models/episode_comment_model.dart';
+import '../helpers/app_colors.dart';
 
 class EpisodeCommentsPage extends StatefulWidget {
   EpisodeCommentsPage({Key? key}) : super(key: key);
