@@ -370,7 +370,7 @@ class _AddNewEpisodePageState extends State<AddNewEpisodePage> {
         );
       },
       hideHeader: Platform.isAndroid,
-      // height: 250,
+      // height: 300,
       // containerColor: Colors.white,
       // headerColor: Colors.white,
       title: Text(

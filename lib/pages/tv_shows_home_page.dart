@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+
 import '../bloc/authentication/authentication_cubit.dart';
 import '../bloc/tv_show_details_page/tv_show_details_page_cubit.dart';
 import '../bloc/tv_shows_home_page/tv_shows_home_page_cubit.dart';
@@ -13,8 +14,8 @@ import '../core/localization/app_localization.dart';
 import '../data/models/tv_shows_model.dart';
 import '../data/repository/tv_shows_repository.dart';
 import '../helpers/app_colors.dart';
-import 'tv_show_details_page.dart';
 import '../widgets/app_circular_progress_indicator.dart';
+import 'tv_show_details_page.dart';
 
 class TvShowsHomePage extends StatefulWidget {
   TvShowsHomePage({Key? key}) : super(key: key);

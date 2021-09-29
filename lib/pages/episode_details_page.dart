@@ -3,14 +3,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import '../bloc/episode_comments_page/episode_comments_page_cubit.dart';
-import '../data/repository/tv_shows_repository.dart';
-import 'episode_comments_page.dart';
 import '../core/app_config.dart';
 import '../core/localization/app_localization.dart';
 import '../data/models/episode_model.dart';
+import '../data/repository/tv_shows_repository.dart';
 import '../helpers/app_colors.dart';
 import '../widgets/url_image_page_header_app_bar.dart';
+import 'episode_comments_page.dart';
 
 class EpisodeDetailsPage extends StatelessWidget {
   

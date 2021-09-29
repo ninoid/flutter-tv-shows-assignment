@@ -1,6 +1,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../core/app_config.dart';
 import '../core/exceptions/no_internet_exception.dart';
 import '../helpers/utils.dart';
