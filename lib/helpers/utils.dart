@@ -1,6 +1,5 @@
+import 'dart:io';
 import 'dart:math';
-
-import 'data_connection_checker.dart';
 
 
 class Utils {
@@ -9,7 +8,17 @@ class Utils {
 
   
   static Future<bool> isInternetAvailable() async {
-    return await DataConnectionChecker().hasConnection;
+    // return await DataConnectionChecker().hasConnection;
+    return await _testInternet();
+  }
+
+  static Future<bool> _testInternet() async {
+    try {
+      final response = await InternetAddress.lookup('www.google.com');
+      return response.isNotEmpty;
+    } catch (anyErr) {
+      return false;
+    }
   }
 
   static bool isEmailAddresValid(String emailAddress) {
