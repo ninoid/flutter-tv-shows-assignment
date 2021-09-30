@@ -1,6 +1,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tv_shows/data/web_api_service.dart';
 
 import '../core/app_config.dart';
 import '../core/exceptions/no_internet_exception.dart';
@@ -25,6 +26,7 @@ class DioClient {
   }) async {
 
     final dio = Dio();
+    dio.options.baseUrl = WebApiService.webApiBaseUrl;
     dio.options.contentType = contentType;
     dio.options.connectTimeout = connectTimeout;
 

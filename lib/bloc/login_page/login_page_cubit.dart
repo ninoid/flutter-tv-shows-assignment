@@ -123,6 +123,7 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
       try {
         // try to save current login credientals
         // but do nothing if save to sembast fail 
+        // we will not encrypt login credientals in this demo... :)
         if (currentState.isRememberMeChecked) {
           final persistModel = CurrentUserCredientalsModel(email: _email, password: _password);
           await _userRepository.saveCurrentUserLoginCredientalsModel(persistModel);

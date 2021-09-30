@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
+import 'package:tv_shows/core/app_config.dart';
 import 'models/add_new_episode_web_api_request_model.dart';
 
 import 'dio_client.dart';
@@ -17,10 +18,8 @@ class WebApiService {
     return instance;
   }
 
-
-  static const webApiDevBaseUrl = "https://api.infinum.academy";
-  static const webApiBaseUrlProd = "https://api.infinum.academy";
-  static final webApiBaseUrl = kReleaseMode ? webApiBaseUrlProd : webApiDevBaseUrl;
+  
+  static final webApiBaseUrl = kReleaseMode ? WEB_API_BASE_URL_PROD : WEB_API_BASE_URL_DEV;
 
   
 
@@ -29,7 +28,7 @@ class WebApiService {
     required String password
   }) async {
     final dio = await DioClient().getDio(shouldIncludeAuthorizationHeader: false);
-    final url = "$webApiBaseUrl/api/users/sessions";
+    final url = "/api/users/sessions";
     final data = {
       "email": email,
       "password": password
@@ -42,7 +41,7 @@ class WebApiService {
 
   Future<Response> getShows() async {
     final dio = await DioClient().getDio();
-    final url = "$webApiBaseUrl/api/shows";
+    final url = "/api/shows";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
@@ -52,7 +51,7 @@ class WebApiService {
   Future<Response> getShowDetails({required String showId}) async {
     final dio = await DioClient().getDio();
     final showIdUrlEncoded = Uri.encodeComponent(showId);
-    final url = "$webApiBaseUrl/api/shows/$showIdUrlEncoded";
+    final url = "/api/shows/$showIdUrlEncoded";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
@@ -62,7 +61,7 @@ class WebApiService {
   Future<Response> getShowEpisodes({required String showId}) async {
     final dio = await DioClient().getDio();
     final showIdUrlEncoded = Uri.encodeComponent(showId);
-    final url = "$webApiBaseUrl/api/shows/$showIdUrlEncoded/episodes";
+    final url = "/api/shows/$showIdUrlEncoded/episodes";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
@@ -72,7 +71,7 @@ class WebApiService {
   Future<Response> getEpisodeDetails({required String episodeId}) async {
     final dio = await DioClient().getDio();
     final episodeIdUrlEncoded = Uri.encodeComponent(episodeId);
-    final url = "$webApiBaseUrl/api/episodes/$episodeIdUrlEncoded";
+    final url = "/api/episodes/$episodeIdUrlEncoded";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
@@ -83,7 +82,7 @@ class WebApiService {
   Future<Response> getEpisodeComments({required String episodeId}) async {
     final dio = await DioClient().getDio();
     final episodeIdUrlEncoded = Uri.encodeComponent(episodeId);
-    final url = "$webApiBaseUrl/api/episodes/$episodeIdUrlEncoded/comments";
+    final url = "/api/episodes/$episodeIdUrlEncoded/comments";
     debugPrint("WebApi request url: $url");
     final response = await dio.get(url);
     debugPrint("WebApi response data: ${response.data?.toString() ?? ""}");
@@ -93,7 +92,7 @@ class WebApiService {
 
   Future<Response> postEpisodeComment({required String episodeId, required String commentText}) async {
     final dio = await DioClient().getDio();
-    final url = "$webApiBaseUrl/api/comments/";
+    final url = "/api/comments/";
     debugPrint("WebApi request url: $url");
     final data = {
       "episodeId": episodeId,
@@ -109,7 +108,7 @@ class WebApiService {
     final dio = await DioClient().getDio(
       contentType: "multipart/form-data"
     );
-    final url = "$webApiBaseUrl/api/media/";
+    final url = "/api/media/";
     debugPrint("WebApi request url: $url");
     final fileName = basename(file.path);
     final multipartFile = await MultipartFile.fromFile(file.path, filename: fileName);
@@ -123,7 +122,7 @@ class WebApiService {
 
   Future<Response> addNewEpisode({required AddNewEpisodeWebApiRequestModel addEpisodeModel}) async {
     final dio = await DioClient().getDio();
-    final url = "$webApiBaseUrl/api/episodes/";
+    final url = "/api/episodes/";
     debugPrint("WebApi request url: $url");
     final data = addEpisodeModel.toMap();
     debugPrint("WebApi request data: ${data.toString()}");

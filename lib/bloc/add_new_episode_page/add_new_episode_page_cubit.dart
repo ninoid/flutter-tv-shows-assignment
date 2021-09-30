@@ -95,6 +95,7 @@ class AddNewEpisodePageCubit extends Cubit<AddNewEpisodePageBaseState> {
     String? errorMessage;
 
     try {
+      // we will not resize or compress image in this demo... :)
       final uploadImageApiResult = await _tvShowsRepository.uploadWebApiMedia(
         file: File(_coverImageFilePath)
       );

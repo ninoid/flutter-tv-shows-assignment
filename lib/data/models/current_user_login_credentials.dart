@@ -3,8 +3,9 @@ import 'dart:convert';
 
 class CurrentUserCredientalsModel {
   
+  // we will not encrypt login credientals in this demo... :)
   String email;
-  String password;
+  String password;  
 
   CurrentUserCredientalsModel({
     required this.email,
