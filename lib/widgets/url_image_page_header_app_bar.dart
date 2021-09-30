@@ -61,24 +61,24 @@ class UrlImagePageHeaderAppBar implements SliverPersistentHeaderDelegate {
         ),
        
       
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                child: IntrinsicWidth(
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: NavigationBackButton(
-                        onPresssed: () {
-                          Navigator.of(context).pop();
-                        },
-                        shouldDropShadow: opacityForShrinkOffset(shrinkOffset) < 0.1,
-                      ),
-                    ),
-                  ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Center(
+            // height: 50,
+            // width: 50,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: NavigationBackButton(
+                  onPresssed: () {
+                    Navigator.of(context).pop();
+                  },
+                  shouldDropShadow: opacityForShrinkOffset(shrinkOffset) < 0.1,
                 ),
               ),
-            )
+            ),
+          ),
+        )
       ]
         
       

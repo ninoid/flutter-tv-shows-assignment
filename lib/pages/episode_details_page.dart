@@ -33,7 +33,7 @@ class EpisodeDetailsPage extends StatelessWidget {
             floating: false,
             delegate: UrlImagePageHeaderAppBar(
               urlImage: episodeModel.imageUrlAbsolute, 
-              minExtent: 80, 
+              minExtent: MediaQuery.of(context).padding.top + 80, 
               maxExtent: MediaQuery.of(context).size.width
             )
           ),

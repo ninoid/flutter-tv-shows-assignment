@@ -37,7 +37,7 @@ class TvShowDetailsPageCubit extends Cubit<TvShowDetailsPageBaseState> {
 
     try {
       // simulate delay to show loader state
-      await Future.delayed(Duration(milliseconds: simulateDelay ? 2000 : 0));
+      await Future.delayed(Duration(milliseconds: simulateDelay ? 1000 : 0));
       
       // run 2 futures at same moment and await them both
       final webApiRequestFutures = await Future.wait([

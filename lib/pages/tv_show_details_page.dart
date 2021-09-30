@@ -59,7 +59,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                       floating: false,
                       delegate: UrlImagePageHeaderAppBar(
                         urlImage: state.tvShowDetailsModel.imageUrlAbsolute, 
-                        minExtent: 80, 
+                        minExtent: MediaQuery.of(context).padding.top + 80, 
                         maxExtent: MediaQuery.of(context).size.width
                       )
                     ),
@@ -182,6 +182,9 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
             leading: NavigationBackButton(
               onPresssed: () => Navigator.of(context).pop(),
               shouldDropShadow: true,
+            ),
+            cupertino: (_, __) => CupertinoNavigationBarData(
+              border: Border.all(color: Colors.transparent)
             ),
           ),
           body: SafeArea(

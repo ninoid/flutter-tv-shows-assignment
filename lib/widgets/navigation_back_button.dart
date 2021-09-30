@@ -23,12 +23,13 @@ class NavigationBackButton extends StatelessWidget {
       children: [
         Container(
           height: size,
+          width: size,
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: shouldDropShadow ? Colors.black.withOpacity(0.33) : Colors.transparent,
+                color: shouldDropShadow ? Colors.black.withOpacity(0.3) : Colors.transparent,
                 blurRadius: 2,
                 spreadRadius: 0.3
               ),
@@ -39,6 +40,7 @@ class NavigationBackButton extends StatelessWidget {
           icon: SvgPicture.asset(
             "assets/svg/ic-navigate-back.svg",
             height: size,
+            width: size
           ),
           padding: EdgeInsets.zero,
           onPressed: onPresssed,
