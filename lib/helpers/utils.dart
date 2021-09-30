@@ -8,7 +8,11 @@ class Utils {
 
   
   static Future<bool> isInternetAvailable() async {
+    // DataConnectionChecker can be unsafe for some private networks
+    // because ICMP (ping) traffic can be blocked by firewalls/routers
     // return await DataConnectionChecker().hasConnection;
+    
+    // This is safer solution
     return await _testInternet();
   }
 

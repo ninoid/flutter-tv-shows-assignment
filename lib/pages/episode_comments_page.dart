@@ -20,58 +20,34 @@ class EpisodeCommentsPage extends StatefulWidget {
   _EpisodeCommentsPageState createState() => _EpisodeCommentsPageState();
 }
 
-class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> with WidgetsBindingObserver{
+class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> {
 
   final _textFieldController = TextEditingController();
   final _textFieldFocusNode = FocusNode();
   final _commentsListScrollController = ScrollController();
 
-
-  @override
-  void initState() {
-    WidgetsBinding.instance!.addObserver(this);
-    _textFieldFocusNode.addListener(() {
-      if (_textFieldFocusNode.hasFocus) {
-        // animate to the end of comments list when textfield receive focus
-      }
-    });
-
-    super.initState();
-  }
-
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
     _textFieldController.dispose();
     _textFieldFocusNode.dispose();
     _commentsListScrollController.dispose();
     super.dispose();
   }
 
-  @override
-  void didChangeMetrics() {
-    
-    final bottomInset = WidgetsBinding.instance!.window.viewInsets.bottom;
-    final isKeyboardVisible = bottomInset > 0.0;
-    if (isKeyboardVisible) {
-      _scrollToEndOfCommentsListView(
-        bottomInset: bottomInset
-      );
-    }
-  }
 
   void _dismissKeyboard() {
     _textFieldFocusNode.unfocus();
   }
 
-  void _scrollToEndOfCommentsListView({double bottomInset = 0}) {
+  void _scrollToBottomOfCommentsListView() {
     if (_commentsListScrollController.hasClients) {
-      // ensure keyboard visible inset and post textfield container height
-      var offset =  _commentsListScrollController.position.maxScrollExtent + bottomInset + 80;
-      _commentsListScrollController.animateTo(
-        offset, 
-        duration: const Duration(milliseconds: 500), 
-        curve: Curves.easeOut
+      // _commentsListScrollController.animateTo(
+      //   _commentsListScrollController.position.maxScrollExtent, 
+      //   duration: const Duration(milliseconds: 300), 
+      //   curve: Curves.fastOutSlowIn
+      // );
+      _commentsListScrollController.jumpTo(
+        _commentsListScrollController.position.maxScrollExtent, 
       );
     }
   }
@@ -94,7 +70,6 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> with WidgetsB
           listener: (context, state) {
             if (state is EpisodeCommentsPagePostSuccessfulState) {
               _textFieldController.text = "";
-              _scrollToEndOfCommentsListView();
             }
           },
           buildWhen: (previous, current) {
@@ -189,6 +164,7 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> with WidgetsB
                           padding: const EdgeInsets.only(
                             bottom: 100 // ensure comment text field container height
                           ),
+                          // reverse: true,
                           itemBuilder: (context, index) {
                             // return posting comment row
                             if (index == loadedState!.comments.length) {
@@ -326,6 +302,9 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> with WidgetsB
                                           ? () {
                                               _dismissKeyboard();
                                               context.read<EpisodeCommentsPageCubit>().postEpisodeComment();
+                                              Future.delayed(Duration(milliseconds: 100)).then(
+                                                (value) => _scrollToBottomOfCommentsListView()
+                                              );
                                             }
                                           : null
                                       )

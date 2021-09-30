@@ -86,7 +86,10 @@ class EpisodeDetailsPage extends StatelessWidget {
                             SizedBox(width: 6),
                             Text(
                               AppLocalizations.of(context).localizedString("Comments"),
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500
+                              )
                             )
                           ],
                         ),

@@ -29,19 +29,22 @@ class UrlImagePageHeaderAppBar implements SliverPersistentHeaderDelegate {
       children: [
         Opacity(
           opacity: opacityForShrinkOffset(shrinkOffset),
-          child: CachedNetworkImage(
-            fit: BoxFit.cover,
-            imageUrl: urlImage,
-            placeholder: (context, url) => SkeletonAnimation(
-              child: Container(),
-              shimmerColor: AppColors.skeletonAnimationShimmerColor
-            ),
-            errorWidget: (context, url, error) => Center(
-              child: Icon(
-                Icons.warning_amber_outlined, 
-                size: maxExtent/3, color: 
-                AppColors.grey
-              )
+          child: Container(
+            color: AppColors.imagePlaceholderColor,
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              imageUrl: urlImage,
+              placeholder: (context, url) => SkeletonAnimation(
+                child: Container(),
+                shimmerColor: AppColors.skeletonAnimationShimmerColor
+              ),
+              errorWidget: (context, url, error) => Center(
+                child: Icon(
+                  Icons.warning_amber_outlined, 
+                  size: maxExtent/3, color: 
+                  AppColors.grey
+                )
+              ),
             ),
           ),
         ),
@@ -73,8 +76,7 @@ class UrlImagePageHeaderAppBar implements SliverPersistentHeaderDelegate {
             ),
           ),
         )
-      ]
-        
+      ]    
       
     );
   }
