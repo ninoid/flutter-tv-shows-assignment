@@ -199,7 +199,7 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                       return GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
-                          context.read<TvShowDetailsPageCubit>().loadShowDetails();
+                          context.read<TvShowDetailsPageCubit>().loadShowDetails(simulateDelay: true);
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,

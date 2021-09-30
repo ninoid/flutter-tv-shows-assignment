@@ -71,10 +71,31 @@ class TvShowDetailsPageCubit extends Cubit<TvShowDetailsPageBaseState> {
     }
 
     if (state is TvShowDetailsPageLoadedState) {
-      
+      final loadedState = state as TvShowDetailsPageLoadedState;
+      // cache for later offline mode if required
+      _trySaveToLocalStore(
+        tvShowDetailsModel: loadedState.tvShowDetailsModel, 
+        episodes: loadedState.showEpisodes
+      );
+      // final tvShowDetailsCached = await _tvShowsRepository.getLocalStoreTvShowDetailsModel(tvShowModel.id);
+      // final episodesCached = await _tvShowsRepository.getLocalStoreTvShowEpisodes(tvShowModel.id);
+    } 
+  }
+
+
+
+  Future<void> _trySaveToLocalStore({
+    required TvShowDetailsModel tvShowDetailsModel, 
+    required List<EpisodeModel> episodes
+  }) async {
+    debugPrint("Saving tv show details and episodes to Sembast NoSQL db");
+    try {
+      await _tvShowsRepository.saveTvShowDetailsToLocalStore(tvShowDetailsModel);
+      await _tvShowsRepository.saveTvShowEpisodesToLocalStore(tvShowId: tvShowDetailsModel.id, episodes: episodes);
+      debugPrint("Saved to Sembast");
+    } catch (e) {
+      debugPrint(e.toString());
     }
-    
-    
   }
 
 
