@@ -47,7 +47,7 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
         _password = currentUserCredientalsModel?.password ?? "";
       }
     } catch (e) {
-      RootApp.instance.showSkackbar(
+      RootApp.instance.showFlushbar(
         message: "An error occured while restoring current user credientals."
       );
     }
@@ -138,7 +138,7 @@ class LoginPageCubit extends Cubit<LoginPageBaseState> {
       }
 
     } else {
-      RootApp.instance.showSkackbar(message: loginErrorMessage);
+      RootApp.instance.showFlushbar(message: loginErrorMessage);
       emit(currentState.copyWith(
         isLoginInProgress: false
       ));

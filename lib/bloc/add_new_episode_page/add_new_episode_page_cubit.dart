@@ -130,10 +130,10 @@ class AddNewEpisodePageCubit extends Cubit<AddNewEpisodePageBaseState> {
 
     if (success) {
       emit(AddNewEpisodeSuccessState());
-      RootApp.instance.showSkackbar(message: "New episode added :)");
+      RootApp.instance.showFlushbar(message: "New episode added :)");
       _tvShowDetailsPageCubit.loadShowDetails();
     } else {
-      RootApp.instance.showSkackbar(message: errorMessage ?? ERROR_GENERIC_SOMETHING_WENT_WRONG);
+      RootApp.instance.showFlushbar(message: errorMessage ?? ERROR_GENERIC_SOMETHING_WENT_WRONG);
       emit((state as AddNewEpisodePageState).copyWith(postingNewEpisodeToApiFlag: false));
     }
 

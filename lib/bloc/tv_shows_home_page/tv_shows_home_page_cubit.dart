@@ -41,7 +41,7 @@ class TvShowsHomePageCubit extends Cubit<TvShowsHomePageState> {
     }
 
     if (!success) {
-      RootApp.instance.showSkackbar(message: errorMessage);
+      RootApp.instance.showFlushbar(message: errorMessage);
     } else {
       await _trySaveTvShowToLocalStore(tvShows!);
     }

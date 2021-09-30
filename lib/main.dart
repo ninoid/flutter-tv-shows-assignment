@@ -11,7 +11,7 @@ import 'bloc/application/application_cubit.dart';
 import 'bloc/authentication/authentication_cubit.dart';
 import 'bloc/connectivity_monitor/connectivity_monitor_cubit.dart';
 import 'bloc/login_page/login_page_cubit.dart';
-import 'bloc/show_snackbnar_listener/show_snackbar_listener_cubit.dart';
+import 'bloc/show_flushbar_listener/show_flushbar_listener_cubit.dart';
 import 'bloc/tv_shows_home_page/tv_shows_home_page_cubit.dart';
 import 'core/app_config.dart';
 import 'core/bloc_observer/app_bloc_observer.dart';
@@ -64,7 +64,7 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
   late final ApplicationCubit applicationCubit;
   late final ConnectivityMonitorCubit connectivityMonitorCubit;
   late final AuthenticationCubit authenticationCubit;
-  late final ShowSnackbarListenerCubit showSnackbarListenerCubit;
+  late final ShowFlushbarListenerCubit showFlushbarListenerCubit;
 
   static late final RootApp instance;
 
@@ -85,7 +85,7 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
       authenticationCubit: authenticationCubit,
       connectivityMonitorCubit: connectivityMonitorCubit
     );
-    showSnackbarListenerCubit = ShowSnackbarListenerCubit();
+    showFlushbarListenerCubit = ShowFlushbarListenerCubit();
     WidgetsBinding.instance!.addObserver(this);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     applicationCubit.applicationInitialize();
@@ -114,8 +114,8 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
           BlocProvider<ConnectivityMonitorCubit>.value(
             value: connectivityMonitorCubit
           ),
-          BlocProvider<ShowSnackbarListenerCubit>.value(
-            value: showSnackbarListenerCubit
+          BlocProvider<ShowFlushbarListenerCubit>.value(
+            value: showFlushbarListenerCubit
           ),
         ],
         child: BlocBuilder<ApplicationCubit, ApplicationBaseState>(
@@ -162,7 +162,7 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
                 return supportedLocales.first;
               },
               home: PlatformScaffold(
-                body: BlocListener<ShowSnackbarListenerCubit, ShowSnackbarListenerState>(
+                body: BlocListener<ShowFlushbarListenerCubit, ShowFlushbarListenerState>(
                   listener: (context, state) {
                     AppFlushbarHelper.showFlushbar(
                       context: context, 
@@ -227,12 +227,12 @@ class RootApp extends StatelessWidget with WidgetsBindingObserver {
     );
   }
 
-  void showSkackbar({
+  void showFlushbar({
     required String message,
     String? title, 
     int durationSeconds = 3
   }) {
-    showSnackbarListenerCubit.emit(ShowSnackbarListenerState(
+    showFlushbarListenerCubit.emit(ShowFlushbarListenerState(
       message: message,
       title: title,
       durationSeconds: durationSeconds

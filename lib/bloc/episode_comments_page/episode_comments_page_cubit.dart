@@ -107,13 +107,13 @@ class EpisodeCommentsPageCubit extends Cubit<EpisodeCommentsPageState> {
         
       } else {
         final errorMsg = apiResult.error ?? ERROR_GENERIC_SOMETHING_WENT_WRONG;
-        RootApp.instance.showSkackbar(message: errorMsg);
+        RootApp.instance.showFlushbar(message: errorMsg);
         emit(currentState.copyWith(postingNewCommentFlag: false));
       }
 
     } catch (e) {
       debugPrint(e.toString());
-      RootApp.instance.showSkackbar(message: e.toString());
+      RootApp.instance.showFlushbar(message: e.toString());
       emit(currentState.copyWith(postingNewCommentFlag: false));
     }
 
