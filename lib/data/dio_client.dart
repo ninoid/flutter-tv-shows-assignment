@@ -6,6 +6,7 @@ import 'package:tv_shows/data/web_api_service.dart';
 import '../core/app_config.dart';
 import '../core/exceptions/no_internet_exception.dart';
 import '../helpers/utils.dart';
+import '../main.dart';
 
 
 class DioClient {
@@ -49,16 +50,18 @@ class DioClient {
         handler.next(options);
         
       }, onError: (error, handler) async {
-         handler.next(error);
-        // final response = error.response;
-        // if (response != null) {
-        //   if (response.statusCode == 401) {
-        //     // unauthorized
-        //     RootApp.instance.signOut();
-        //   }
-        // } else {
-        //   handler.next(error);
-        // }
+        final response = error.response;
+        if (response != null) {
+          if (response.statusCode == 401 && RootApp.instance.authenticationCubit.isAuthenticated) {
+            // unauthorized
+            // refresh token if required
+            RootApp.instance.signOut();
+          } else {
+            handler.next(error);
+          }
+        } else {
+          handler.next(error);
+        }
       }));
     return dio;
   }
