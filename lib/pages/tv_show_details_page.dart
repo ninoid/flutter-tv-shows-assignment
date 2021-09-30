@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -37,8 +38,6 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
         if (state is TvShowDetailsPageLoadedState) {
 
           return PlatformScaffold(
-            
-            
             material: (_, __) => MaterialScaffoldData(
               // for iOS we will use stack and bottomRight safe area position
               floatingActionButton: FloatingActionButton(
@@ -49,127 +48,130 @@ class _TvShowDetailsPageState extends State<TvShowDetailsPage> {
                 backgroundColor: AppColors.pink,
               ),
             ),
-            body: Stack(
-              children: [
-                CustomScrollView(
-                  physics: BouncingScrollPhysics(),
-                  slivers: [
-                    SliverPersistentHeader(
-                      pinned: true,
-                      floating: false,
-                      delegate: UrlImagePageHeaderAppBar(
-                        urlImage: state.tvShowDetailsModel.imageUrlAbsolute, 
-                        minExtent: MediaQuery.of(context).padding.top + 80, 
-                        maxExtent: MediaQuery.of(context).size.width
-                      )
-                    ),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: DEFAULT_CONTENT_PADDING),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(height: 18),
-                            // Title
-                            Text(
-                              state.tvShowDetailsModel.title,
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w600
+            body: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle.dark,  
+              child: Stack(
+                children: [
+                  CustomScrollView(
+                    physics: BouncingScrollPhysics(),
+                    slivers: [
+                      SliverPersistentHeader(
+                        pinned: true,
+                        floating: false,
+                        delegate: UrlImagePageHeaderAppBar(
+                          urlImage: state.tvShowDetailsModel.imageUrlAbsolute, 
+                          minExtent: MediaQuery.of(context).padding.top + 80, 
+                          maxExtent: MediaQuery.of(context).size.width
+                        )
+                      ),
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: DEFAULT_CONTENT_PADDING),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(height: 18),
+                              // Title
+                              Text(
+                                state.tvShowDetailsModel.title,
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w600
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 18),
-                            // Description
-                            Text(
-                              state.tvShowDetailsModel.description, 
-                              style: TextStyle(
-                                color: AppColors.grey,
-                                fontSize: 14
+                              SizedBox(height: 18),
+                              // Description
+                              Text(
+                                state.tvShowDetailsModel.description, 
+                                style: TextStyle(
+                                  color: AppColors.grey,
+                                  fontSize: 14
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 24),
-                            // Episodes
-                            Row(
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context).localizedString("Episodes"), 
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    fontWeight: FontWeight.w400
+                              SizedBox(height: 24),
+                              // Episodes
+                              Row(
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context).localizedString("Episodes"), 
+                                    style: TextStyle(
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.w400
+                                    ),
+                                  ),
+                                  SizedBox(width: 16),
+                                  Text(
+                                    state.showEpisodes.length.toString(), 
+                                    style: TextStyle(
+                                      fontSize: 23,
+                                      color: AppColors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 16),
+                            ]
+                          ),
+                        )
+                      ),
+                      // add list of episodes
+                      Builder(
+                        builder: (context) {
+                
+                          if (state.showEpisodes.isEmpty) {
+                            return SliverToBoxAdapter(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  DEFAULT_CONTENT_PADDING, 
+                                  12, 
+                                  DEFAULT_CONTENT_PADDING, 
+                                  40
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context).localizedString("Episodes list empty :("),
+                                  style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                    color: AppColors.grey
                                   ),
                                 ),
-                                SizedBox(width: 16),
-                                Text(
-                                  state.showEpisodes.length.toString(), 
-                                  style: TextStyle(
-                                    fontSize: 23,
-                                    color: AppColors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16),
-                          ]
-                        ),
-                      )
-                    ),
-                    // add list of episodes
-                    Builder(
-                      builder: (context) {
-              
-                        if (state.showEpisodes.isEmpty) {
-                          return SliverToBoxAdapter(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                DEFAULT_CONTENT_PADDING, 
-                                12, 
-                                DEFAULT_CONTENT_PADDING, 
-                                40
                               ),
-                              child: Text(
-                                AppLocalizations.of(context).localizedString("Episodes list empty :("),
-                                style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                  color: AppColors.grey
-                                ),
-                              ),
+                            );
+                          }
+                
+                          return SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return _buildEpisodeListItemWidget(
+                                  episode: state.showEpisodes[index], 
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                    platformPageRoute(
+                                      builder: (context) => EpisodeDetailsPage(
+                                        episodeModel: state.showEpisodes[index]
+                                      ),
+                                      context: context
+                                    )
+                                  );
+                                  }
+                                );
+                              },
+                              childCount: state.showEpisodes.length,
                             ),
                           );
                         }
-              
-                        return SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              return _buildEpisodeListItemWidget(
-                                episode: state.showEpisodes[index], 
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                  platformPageRoute(
-                                    builder: (context) => EpisodeDetailsPage(
-                                      episodeModel: state.showEpisodes[index]
-                                    ),
-                                    context: context
-                                  )
-                                );
-                                }
-                              );
-                            },
-                            childCount: state.showEpisodes.length,
-                          ),
-                        );
-                      }
-              
-                    )
-                  ],
-                ),
-
-                Platform.isIOS 
-                  ? Positioned(
-                      bottom: MediaQuery.of(context).padding.bottom + DEFAULT_CONTENT_PADDING,
-                      right: MediaQuery.of(context).padding.right + DEFAULT_CONTENT_PADDING,
-                      child: _iOSFabButton(),
-                    )
-                  : Container()
-              ]
+                
+                      )
+                    ],
+                  ),
+            
+                  Platform.isIOS 
+                    ? Positioned(
+                        bottom: MediaQuery.of(context).padding.bottom + DEFAULT_CONTENT_PADDING,
+                        right: MediaQuery.of(context).padding.right + DEFAULT_CONTENT_PADDING,
+                        child: _iOSFabButton(),
+                      )
+                    : Container()
+                ]
+              ),
             ),
           );
 

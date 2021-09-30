@@ -28,10 +28,10 @@ class DioClient {
     dio.options.contentType = contentType;
     dio.options.connectTimeout = connectTimeout;
 
-    final isInternetAvailable = await Utils.isInternetAvailable();
-    if (!isInternetAvailable) {
-      throw NoInternetException();
-    }
+    // final isInternetAvailable = await Utils.isInternetAvailable();
+    // if (!isInternetAvailable) {
+    //   throw NoInternetException();
+    // }
 
     if (shouldIncludeAuthorizationHeader) {
       final sp = await SharedPreferences.getInstance();

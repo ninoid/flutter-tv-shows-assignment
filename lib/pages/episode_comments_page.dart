@@ -389,7 +389,7 @@ class _EpisodeCommentsPageState extends State<EpisodeCommentsPage> with WidgetsB
               bool hasSubtitleMessage = (subtitle?.trim() ?? "").isNotEmpty;
               if (hasSubtitleMessage) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 40),
                   child: Text(
                     AppLocalizations.of(context).localizedString(subtitle!),
                     style: TextStyle(

@@ -51,10 +51,9 @@ class UrlImagePageHeaderAppBar implements SliverPersistentHeaderDelegate {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.transparent, Colors.white],
-                stops: [0.2, 1.0],
+                stops: [0.7, 1.0],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                tileMode: TileMode.repeated,
               ),
             ),
           ),
@@ -81,10 +80,12 @@ class UrlImagePageHeaderAppBar implements SliverPersistentHeaderDelegate {
   }
 
   double opacityForShrinkOffset(double shrinkOffset) {
+    final visibleHeight = (maxExtent - shrinkOffset); 
+    if (visibleHeight > minExtent) { return 1; }
     // simple formula: fade out text as soon as shrinkOffset > 0
     return 1.0 - max(0.0, shrinkOffset) / maxExtent;
     // more complex formula: starts fading out text when shrinkOffset > minExtent
-    //return 1.0 - max(0.0, (shrinkOffset - minExtent)) / (maxExtent - minExtent);
+    // return 1.0 - max(0.0, (shrinkOffset - minExtent)) / (maxExtent - minExtent);
   }
 
   @override
